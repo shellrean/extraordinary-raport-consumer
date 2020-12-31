@@ -6,6 +6,8 @@ const Login = () => import("@/views/auth/Login")
 const Layout = () => import("@/views/layout/App")
 const Dashboard = () => import("@/views/dashboard/Dashboard")
 
+const User = () => import("@/views/user/Index")
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -27,6 +29,11 @@ const routes = [
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard
+      },
+      {
+        path: '/users',
+        name: 'user.data',
+        component: User
       }
     ]
   }
