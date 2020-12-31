@@ -10,7 +10,7 @@ const $axios = axios.create({
 
 $axios.interceptors.request.use(
     function(config) {
-        config.headers.Authorization = `Bearer ${store.state.token}`
+        config.headers.Authorization = `Bearer ${store.state.access_token}`
         config.url = `${store.state.baseURL}/${config.url}`
         return config
     },
