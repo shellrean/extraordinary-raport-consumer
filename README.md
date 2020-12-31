@@ -1,19 +1,29 @@
-# extraordinary-raport
+# Extraordinary-raport-consumer
 
-## Project setup
-```
-yarn install
-```
+Extraordinary-raport-consumer adalah aplikasi client dalam rangkaian extraordinary-raport, menangani request dan berintaksi dengan user sehingga pembuatan raport menjadi lebih baik dan cepat.
 
-### Compiles and hot-reloads for development
+## Installation
+Clone aplikasi dari repository
+``` bash
+$ git clone https://github.com/shellrean/extraordinary-raport-consumer.git
+$ cd extraordinary-raport-service 
+$ yarn install
 ```
-yarn serve
+Copy file ``` .env-example``` menjadi ```.env```\
+ubah file .env
+``` env
+VUE_APP_VERSION="1.0.0"
+VUE_APP_URL=http://localhost
 ```
+lalu jalankan
 
-### Compiles and minifies for production
+``` bash
+$ yarn serve
 ```
-yarn build
-```
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
