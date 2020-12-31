@@ -17,6 +17,11 @@
         </a>
         <ul class="c-sidebar-nav-dropdown-items">
           <li class="c-sidebar-nav-item">
+            <router-link class="c-sidebar-nav-link" :to="{name: 'user.data'}">
+              <span class="c-sidebar-nav-icon"></span> User
+            </router-link>
+          </li>
+          <li class="c-sidebar-nav-item">
             <router-link class="c-sidebar-nav-link" to="/">
               <span class="c-sidebar-nav-icon"></span> Jurusan
             </router-link>
