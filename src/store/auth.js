@@ -12,10 +12,10 @@ const actions = {
                 let network = await $axios.post(`auth`, payload)
 
                 if (network.data.success) {
-                    localStorage.setItem('access_token', network.data.access_token)
-                    localStorage.setItem('refresh_token', network.data.refresh_token)
-                    commit('_set_access_token', network.data.access_token, { root: true })
-                    commit('_set_refresh_token', network.data.refresh_token, { root: true })
+                    localStorage.setItem('access_token', network.data.data.access_token)
+                    localStorage.setItem('refresh_token', network.data.data.refresh_token)
+                    commit('_set_access_token', network.data.data.access_token, { root: true })
+                    commit('_set_refresh_token', network.data.data.refresh_token, { root: true })
                 }
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
@@ -26,7 +26,15 @@ const actions = {
                             if (error.response.data.error_code == 1106) {
                                 commit('_set_errors', error.response.data.errors, { root: true })
                             }
-                            reject({message: error.response.data.message})
+                            else if (error.response.data.error_code == 1206) {
+                                reject({message: 'Akun tidak ditemukan'})
+                            }
+                            else if (error.response.data.error_code == 1301) {
+                                reject({message: 'Password salah'})
+                            }
+                            else {
+                                reject({message: error.response.data.message})
+                            }
                         } else {
                             reject({message: 'Terjadi kesalahan yang tidak dapat dijelaskan'})
                         }

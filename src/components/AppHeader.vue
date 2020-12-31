@@ -38,7 +38,14 @@ export default {
         Breadcrumb
     },
     methods: {
-        
+        async logout() {
+            await localStorage.removeItem('access_token')
+            await localStorage.removeItem('refresh_token')
+            
+            this.$store.state.access_token = localStorage.getItem('access_token')
+            this.$store.state.refresh_token = localStorage.getItem('access_token')
+            this.$router.push({name: 'login'})
+        }
     }
 }
 </script>

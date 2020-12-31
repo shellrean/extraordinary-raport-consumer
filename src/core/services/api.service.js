@@ -29,11 +29,11 @@ $axios.interceptors.response.use(
             if (err_code == 1201) {
                 alert('Token expires')
             }
-            else {
+            else if([1203, 1202].includes(err_code)) {
                 (async function () {
                     await delete localStorage.access_token
                     await delete localStorage.refresh_token
-                    
+                        
                     store.state.access_token = localStorage.getItem('access_token')
                     store.state.refresh_token = localStorage.getItem('refresh_token')
                     router.push({ name: 'login' })
