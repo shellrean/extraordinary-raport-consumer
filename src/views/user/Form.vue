@@ -22,6 +22,7 @@
       <div class="form-group">
         <button class="btn btn-primary btn-sm mr-1" type="submit" :disabled="isLoading || submit_disable">Simpan</button>
         <button class="btn btn-secondary btn-sm" type="button" @click="close" :disabled="isLoading">Batal</button>
+        <button class="float-right btn btn-danger btn-sm" type="button" :disabled="isLoading" v-if="typeof user.id != 'undefined'" @click="remove">Hapus</button>
       </div>
     </form>
   </div>
@@ -42,9 +43,11 @@ export default {
     ...mapState('user', ['user']),
   },
   methods: {
-    ...mapActions('user', ['storeUsers', 'fetchUsers', 'updateUsers']),
+    ...mapActions('user', ['storeUsers', 'fetchUsers', 'updateUsers','deleteUsers']),
     close() {
-      this.$bvModal.hide('modal-user')
+      (async () => {
+        await this.$bvModal.hide('modal-user')
+      })()
       this.$store.commit('user/_set_user_form_data', {})
     },
     onInputPassword() {
@@ -86,6 +89,34 @@ export default {
           }
         })()
       }
+    },
+    remove() {
+      this.$swal({
+        title: 'Informasi',
+        text: "Tindakan ini akan menghapus user secara permanent termasuk semua data yang terhubung ke user ini",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#c3c3c3',
+        confirmButtonText: 'Iya, Lanjutkan!'
+      }).then((result) => {
+        if (result.value) {
+          (async () => {
+            try {
+              await this.deleteUsers(this.user.id)
+              this.close()
+              this.$store.commit('user/_set_user_next_cursor_data', this.$store.state.user.cursor.prev[this.$store.state.user.cursor.prev.length - 1])
+              await this.fetchUsers()
+            } catch (error) {
+              this.$bvToast.toast(`Error: ${error.message}`, {
+                title: "Terjadi kesalahan",
+                variant: "danger",
+                solid: true
+              })
+            }
+          })()
+        }
+      })
     }
   },
   created() {
