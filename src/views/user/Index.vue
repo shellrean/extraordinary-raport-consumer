@@ -75,10 +75,10 @@
                   <div class="col-md-6">
                     <div class="float-right">
                       <div class="btn-group">
-                        <b-button variant="secondary" size="sm" :disabled="selected.length == users.length" @click="selectAllRows">
+                        <b-button variant="secondary" size="sm" :disabled="isLoading || cursor.prev.length == 1" @click="prevPage">
                           <i class="flaticon2-back"></i>
                         </b-button>
-                        <b-button variant="secondary" size="sm" :disabled="selected.length == 0" @click="clearSelected">
+                        <b-button variant="secondary" size="sm" :disabled="isLoading || typeof cursor.next == 'undefined'" @click="nextPage">
                           <i class="flaticon2-next"></i>
                         </b-button>
                       </div>
@@ -97,7 +97,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex'
+import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 import FormUser from './Form'
 export default {
   components: {
@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     ...mapState(['isLoading']),
-    ...mapState('user', ['users']),
+    ...mapState('user', ['users','cursor']),
   },
   methods: {
     ...mapActions('user',['fetchUsers']),
@@ -142,15 +142,23 @@ export default {
     myRowClickHandler(record, index) {
       console.log(record)
     },
+    prevPage() {
+      (async () => {
+        await this.fetchUsers(true)
+      })()
+    },
+    nextPage() {
+      (async () => {
+        await this.fetchUsers()
+      })()
+    },
     onPreviewClick(value, index, item) {
       if(value.target.checked) {
         this.selected.push(item.id)
-        console.log(this.selected)
       } else {
         var idx = this.selected.indexOf(item.id);
         if (idx !== -1) {
-          this.selected.splice(idx, 1);
-          console.log(this.selected)
+          this.selected.splice(idx, 1)
         }
       }
       
