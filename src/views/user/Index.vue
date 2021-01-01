@@ -61,7 +61,7 @@
                 <div class="row mt-2">
                   <div class="col-md-6">
                     <div class="btn-group">
-                      <b-button variant="outline-info" size="sm" :disabled="selected.length == users.length" @click="selectAllRows">
+                      <b-button variant="outline-info" size="sm" :disabled="selected.length == (users != null ? users.length : 0)" @click="selectAllRows">
                         <i class="flaticon-list-3"></i>
                       </b-button>
                       <b-button variant="outline-info" size="sm" :disabled="selected.length == 0" @click="clearSelected">
@@ -90,7 +90,7 @@
           </div>
         </div>
       </div>
-      <b-modal id="modal-user" title="Buat user baru" hide-footer no-close-on-backdrop lazy>
+      <b-modal id="modal-user" :title="modal_user_title[typeof user.id == 'undefined' ? 0 : 1]" hide-footer no-close-on-backdrop lazy>
         <form-user />
       </b-modal>
     </main>
@@ -115,12 +115,16 @@ export default {
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nama', sortable: true},
         { key: 'email', label: 'Email', sortable: true},
+      ],
+      modal_user_title: [
+        "Buat User Baru",
+        "Edit User",
       ]
     }
   },
   computed: {
     ...mapState(['isLoading']),
-    ...mapState('user', ['users','cursor']),
+    ...mapState('user', ['user','users','cursor']),
     limit: {
       get() {
         return this.$store.state.user.limit
@@ -144,7 +148,7 @@ export default {
       (async () => {
         try {
           (async () => {
-            await this.showUsers(record.id)
+            this.showUsers(record.id)
             this.$bvModal.show('modal-user')
           })()
         } catch (err) {
