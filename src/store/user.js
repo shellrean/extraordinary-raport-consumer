@@ -150,6 +150,32 @@ const actions = {
                 commit('_set_loading', false, { root: true })
             }
         })
+    },
+    deleteUsers({ commit }, payload) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                commit('_set_loading', true, { root: true })
+                let network = await $axios.delete(`users/${payload}`)
+
+                commit('_set_loading', false, { root: true })
+                resolve(network.data)
+            } catch (error) {
+                if (typeof error.response != 'undefined') {
+                    if (typeof error.response.data != 'undefined') {
+                        if (typeof error.response.data.error_code != 'undefined') {
+                            reject({message: error.response.data.message})
+                        } else {
+                            reject({message: 'Terjadi kesalahan yang tidak dapat dijelaskan'})
+                        }
+                    } else {
+                        reject({message: 'Terjadi kesalahan yang tidak dapat dijelaskan'})
+                    }
+                } else {
+                    reject({message: 'Terjadi kesalahan saat mengirim request ke server'})
+                }
+                commit('_set_loading', false, { root: true })
+            }
+        })
     }
 }
 
