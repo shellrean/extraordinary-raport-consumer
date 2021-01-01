@@ -36,8 +36,8 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1"><i class="flaticon-browser"></i></span>
                       </div>
-                      <select class="custom-select" v-model="perPage">
-                        <option :value.int="10" selected>10 /halaman</option>
+                      <select class="custom-select" v-model="limit">
+                        <option :value.int="10">10 /halaman</option>
                         <option :value.int="30">30 /halaman</option>
                         <option :value.int="50">50 /halaman</option>
                         <option :value.int="100">100 /halaman</option>
@@ -76,10 +76,10 @@
                     <div class="float-right">
                       <div class="btn-group">
                         <b-button variant="secondary" size="sm" :disabled="isLoading || cursor.prev.length == 1" @click="prevPage">
-                          <i class="flaticon2-back"></i>
+                          <i class="flaticon2-left-arrow"></i>
                         </b-button>
                         <b-button variant="secondary" size="sm" :disabled="isLoading || typeof cursor.next == 'undefined'" @click="nextPage">
-                          <i class="flaticon2-next"></i>
+                          <i class="flaticon2-right-arrow"></i>
                         </b-button>
                       </div>
                     </div>
@@ -90,7 +90,7 @@
           </div>
         </div>
       </div>
-      <b-modal id="modal-user" title="Buat user baru" hide-footer no-close-on-backdrop>
+      <b-modal id="modal-user" title="Buat user baru" hide-footer no-close-on-backdrop lazy>
         <form-user />
       </b-modal>
     </main>
@@ -109,28 +109,29 @@ export default {
         name: 'flip-list'
       },
       search: '',
-      perPage: 10,
       selected: [],
       fields: [
         { key: 'selected', label: 'Aksi' },
         { key: 'id', label: 'ID', sortable: true },
         { key: 'name', label: 'Nama', sortable: true},
         { key: 'email', label: 'Email', sortable: true},
-      ],
-      page: {
-        get() {
-        },
-        set(val) {
-        }
-      }
+      ]
     }
   },
   computed: {
     ...mapState(['isLoading']),
     ...mapState('user', ['users','cursor']),
+    limit: {
+      get() {
+        return this.$store.state.user.limit
+      },
+      set(val) {
+        this.$store.commit('user/_set_user_limit_page', val)
+      }
+    }
   },
   methods: {
-    ...mapActions('user',['fetchUsers']),
+    ...mapActions('user',['fetchUsers', 'showUsers']),
     selectAllRows() {
       this.selected = this.users.map((item) => item.id)
     },
@@ -140,16 +141,49 @@ export default {
     bulkRemove() {
     },
     myRowClickHandler(record, index) {
-      console.log(record)
+      (async () => {
+        try {
+          (async () => {
+            await this.showUsers(record.id)
+            this.$bvModal.show('modal-user')
+          })()
+        } catch (err) {
+          this.$bvToast.toast(`Error: ${error.message}`, {
+            title: "Terjadi kesalahan",
+            variant: "danger",
+            solid: true
+          })
+        }
+      })()
     },
     prevPage() {
       (async () => {
-        await this.fetchUsers(true)
+        try {
+          (async () => {
+            await this.fetchUsers(true)
+          })()
+        } catch (err) {
+          this.$bvToast.toast(`Error: ${error.message}`, {
+            title: "Terjadi kesalahan",
+            variant: "danger",
+            solid: true
+          })
+        }
       })()
     },
     nextPage() {
       (async () => {
-        await this.fetchUsers()
+        try {
+          (async () => {
+            await this.fetchUsers()
+          })()
+        } catch (err) {
+          this.$bvToast.toast(`Error: ${error.message}`, {
+            title: "Terjadi kesalahan",
+            variant: "danger",
+            solid: true
+          })
+        }
       })()
     },
     onPreviewClick(value, index, item) {
@@ -175,6 +209,22 @@ export default {
         variant: "danger",
         solid: true
       })
+    }
+  },
+  watch: {
+    limit() {
+      try {
+        (async () => {
+          this.$store.commit('user/_set_user_next_cursor_data', '')
+          await this.fetchUsers()
+        })()
+      } catch (err) {
+        this.$bvToast.toast(`Error: ${error.message}`, {
+          title: "Terjadi kesalahan",
+          variant: "danger",
+          solid: true
+        })
+      }
     }
   }
 }
