@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import auth from './auth'
 import user from './user'
+import sett from './sett'
 
 Vue.use(Vuex)
 
@@ -45,6 +46,7 @@ export default new Vuex.Store({
   },
   modules: {
     auth,
-    user
+    user,
+    sett
   }
 })
