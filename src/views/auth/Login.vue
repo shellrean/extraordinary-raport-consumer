@@ -23,7 +23,7 @@
                     <i class="flaticon-lock"></i>
                   </span>
                 </div>
-                <input class="form-control" placeholder="Password" required v-model="data.password"/>
+                <input type="password" class="form-control" placeholder="Password" required v-model="data.password"/>
               </div>
               <button class="btn btn-primary px-4" type="submit" :disabled="isLoading">Login</button>
               </form>
