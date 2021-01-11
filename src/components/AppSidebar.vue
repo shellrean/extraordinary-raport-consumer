@@ -45,7 +45,7 @@
       </li>
       <li class="c-sidebar-nav-title">Konfigurasi aplikasi</li>
       <li class="c-sidebar-nav-item">
-        <router-link class="c-sidebar-nav-link" :to="{name: 'dashboard' }">
+        <router-link class="c-sidebar-nav-link" :to="{name: 'set.data' }">
           <i class="mr-3 flaticon2-settings"></i>
           Setting akademik
         </router-link>
