@@ -8,6 +8,8 @@ const Dashboard = () => import("@/views/dashboard/Dashboard")
 
 const User = () => import("@/views/user/Index")
 
+const Sett = () => import("@/views/sett/Sett")
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -34,6 +36,12 @@ const routes = [
         path: '/users',
         name: 'user.data',
         component: User
+      },
+      {
+        path: '/sett',
+        name: 'set.data',
+        meta: { title: 'Setting akademik' },
+        component: Sett
       }
     ]
   }
