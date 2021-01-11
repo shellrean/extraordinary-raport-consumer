@@ -40,7 +40,7 @@ const actions = {
                     commit('_del_user_prev_cursor_data')
                     commit('_set_user_next_cursor_data', state.cursor.prev[state.cursor.prev.length - 1])
                 }
-                let network = await $axios.get(`users?limit=${state.limit}&cursor=${state.cursor.next}`)
+                let network = await $axios.get(`users/?limit=${state.limit}&cursor=${state.cursor.next}`)
 
                 if (network.data.success) {
                     if(!state.cursor.prev.includes(state.cursor.next)) {
@@ -74,7 +74,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                let network = await $axios.post(`users`, state.user)
+                let network = await $axios.post(`users/`, state.user)
 
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
