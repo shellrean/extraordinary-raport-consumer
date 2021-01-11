@@ -147,12 +147,10 @@ export default {
     myRowClickHandler(record, index) {
       (async () => {
         try {
-          (async () => {
-            this.showUsers(record.id)
-            this.$bvModal.show('modal-user')
-          })()
+          this.showUsers(record.id)
+          this.$bvModal.show('modal-user')
         } catch (err) {
-          this.$bvToast.toast(`Error: ${error.message}`, {
+          this.$bvToast.toast(`Error: ${err.message}`, {
             title: "Terjadi kesalahan",
             variant: "danger",
             solid: true
@@ -163,11 +161,9 @@ export default {
     prevPage() {
       (async () => {
         try {
-          (async () => {
-            await this.fetchUsers(true)
-          })()
+          await this.fetchUsers(true)
         } catch (err) {
-          this.$bvToast.toast(`Error: ${error.message}`, {
+          this.$bvToast.toast(`Error: ${err.message}`, {
             title: "Terjadi kesalahan",
             variant: "danger",
             solid: true
@@ -178,11 +174,9 @@ export default {
     nextPage() {
       (async () => {
         try {
-          (async () => {
-            await this.fetchUsers()
-          })()
+          await this.fetchUsers()
         } catch (err) {
-          this.$bvToast.toast(`Error: ${error.message}`, {
+          this.$bvToast.toast(`Error: ${err.message}`, {
             title: "Terjadi kesalahan",
             variant: "danger",
             solid: true
@@ -203,32 +197,32 @@ export default {
     }
   },
   created() {
-    try {
-      (async () => {
-        await this.fetchUsers()
-      })()
-    } catch (err) {
-      this.$bvToast.toast(`Error: ${error.message}`, {
-        title: "Terjadi kesalahan",
-        variant: "danger",
-        solid: true
-      })
-    }
-  },
-  watch: {
-    limit() {
+    (async () => {
       try {
-        (async () => {
-          this.$store.commit('user/_set_user_next_cursor_data', '')
-          await this.fetchUsers()
-        })()
+        await this.fetchUsers()
       } catch (err) {
-        this.$bvToast.toast(`Error: ${error.message}`, {
+        this.$bvToast.toast(`Error: ${err.message}`, {
           title: "Terjadi kesalahan",
           variant: "danger",
           solid: true
         })
       }
+    })()
+  },
+  watch: {
+    limit() {
+      (async () => {
+        try {
+          this.$store.commit('user/_set_user_next_cursor_data', '')
+          await this.fetchUsers()
+        } catch (err) {
+          this.$bvToast.toast(`Error: ${err.message}`, {
+            title: "Terjadi kesalahan",
+            variant: "danger",
+            solid: true
+          })
+        }
+      })()
     }
   }
 }
