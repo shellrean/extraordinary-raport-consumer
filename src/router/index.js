@@ -2,46 +2,87 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
 
-const Login = () => import("@/views/auth/Login")
-const Layout = () => import("@/views/layout/App")
-const Dashboard = () => import("@/views/dashboard/Dashboard")
+const DumpLogin = () => import("@/views/dump/login/Login")
 
-const User = () => import("@/views/user/Index")
-
-const Sett = () => import("@/views/sett/Sett")
+const AppLayout = () => import("@/views/dump/layout/App")
+const DumpMasterIndex = () => import("@/views/dump/master/Index")
+const DumpMasterMajor = () => import("@/views/dump/master/Major")
+const DumpMasterMajorCreate = () => import("@/views/dump/master/MajorCreate")
+const DumpMasterUser = () => import("@/views/dump/master/User")
+const DumpMasterUserCreate = () => import("@/views/dump/master/UserCreate")
+const DumpMasterStudent = () => import("@/views/dump/master/Student")
+const DumpMasterStudentCreate = () => import("@/views/dump/master/StudentCreate")
+const DumpMasterAcademic = () => import("@/views/dump/master/Academic")
+const DumpMasterSubject = () => import("@/views/dump/master/Subject")
+const DumpMasterSubjectCreate = () => import("@/views/dump/master/SubjectCreate")
+const DumpMasterClassroom = () => import("@/views/dump/master/Classroom")
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/login",
-    name: 'login',
-    component: Login
+    path: "/dump-login",
+    name: "dump.login",
+    component: DumpLogin
   },
   {
-    path: "/",
-    component: Layout,
-    meta: { requiresAuth: true },
+    path: "/d",
+    component: AppLayout,
     children: [
       {
-        path: "",
-        redirect: '/dashboard'
+        path: 'dump-master-index',
+        name: 'dump.master.index',
+        component: DumpMasterIndex
       },
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard
+        path: 'dump-master-major',
+        name: 'dump.master.major',
+        component: DumpMasterMajor
       },
       {
-        path: '/users',
-        name: 'user.data',
-        component: User
+        path: 'dump-master-major-create',
+        name: 'dump.master.major.create',
+        component: DumpMasterMajorCreate
       },
       {
-        path: '/sett',
-        name: 'set.data',
-        meta: { title: 'Setting akademik' },
-        component: Sett
+        path: 'dump-master-user',
+        name: 'dump.master.user',
+        component: DumpMasterUser
+      },
+      {
+        path: 'dump-master-user-create',
+        name: 'dump.master.user.create',
+        component: DumpMasterUserCreate
+      },
+      {
+        path: 'dump-master-student',
+        name: 'dump.master.student',
+        component: DumpMasterStudent
+      },
+      {
+        path: 'dump-master-student-create',
+        name: 'dump.master.student.create',
+        component: DumpMasterStudentCreate
+      },
+      {
+        path: 'dump-master-academic',
+        name: 'dump.master.academic',
+        component: DumpMasterAcademic
+      },
+      {
+        path: 'dump-master-subject',
+        name: 'dump.master.subject',
+        component: DumpMasterSubject
+      },
+      {
+        path: 'dump-master-subject-create',
+        name: 'dump.master.subject.create',
+        component: DumpMasterSubjectCreate
+      },
+      {
+        path: 'dump-master-classroom',
+        name: 'dump.master.classroom',
+        component: DumpMasterClassroom
       }
     ]
   }
@@ -72,5 +113,4 @@ router.afterEach(() => {
   store.commit('_loading_page', false)
   store.commit('_set_loading', false)
 })
-
 export default router
