@@ -53,6 +53,11 @@
         </footer>
       </main>
     </section>
+    <div class="absolute top-0 left-0 w-full">
+      <div class="flex justify-center">
+        <LoadBar v-if="isLoading" />
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -60,13 +65,19 @@ import HomeIconLine from '@/components/icons/HomeIconLine'
 import SettingIconLine from '@/components/icons/SettingIconLine'
 import DatabaseIconLine from '@/components/icons/DatabaseIconLine'
 import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
+import LoadBar from '@/components/nano/LoadBar'
+import { mapState } from 'vuex'
 export default {
   name: 'App',
   components: {
     HomeIconLine,
     SettingIconLine,
     DatabaseIconLine,
-    AttachmentIconLine
+    AttachmentIconLine,
+    LoadBar
+  },
+  computed: {
+    ...mapState(['isLoading']),
   }
 };
 </script>

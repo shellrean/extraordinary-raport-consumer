@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
+  <div class="bg-white max-w-52 rounded-lg border-gray-300 border p-3 shadow-lg">
       <div class="flex flex-row">
         <div class="px-2">
           <svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="24" width="24" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">

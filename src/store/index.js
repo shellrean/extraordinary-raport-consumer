@@ -4,6 +4,11 @@ import Vuex from 'vuex'
 import auth from './auth'
 import user from './user'
 import sett from './sett'
+import student from './student'
+import major from './major'
+import subject from './subject'
+import classroom from './classroom'
+import academic from './academic'
 
 Vue.use(Vuex)
 
@@ -47,6 +52,11 @@ export default new Vuex.Store({
   modules: {
     auth,
     user,
-    sett
+    sett,
+    student,
+    major,
+    subject,
+    classroom,
+    academic
   }
 })

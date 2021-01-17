@@ -4,7 +4,6 @@ import store from '@/store'
 
 const DumpLogin = () => import("@/views/dump/login/Login")
 
-const AppLayout = () => import("@/views/dump/layout/App")
 const DumpMasterIndex = () => import("@/views/dump/master/Index")
 const DumpMasterMajor = () => import("@/views/dump/master/Major")
 const DumpMasterMajorCreate = () => import("@/views/dump/master/MajorCreate")
@@ -17,16 +16,97 @@ const DumpMasterSubject = () => import("@/views/dump/master/Subject")
 const DumpMasterSubjectCreate = () => import("@/views/dump/master/SubjectCreate")
 const DumpMasterClassroom = () => import("@/views/dump/master/Classroom")
 
+
+const Login = () => import("@/views/auth/Login")
+
+const AppLayout = () => import("@/views/layout/App")
+const MasterIndex = () => import("@/views/master/Index")
+const MasterStudent = () => import("@/views/master/student/Index")
+const MasterStudentForm = () => import("@/views/master/student/Form")
+const MasterMajor = () => import("@/views/master/major/Index")
+const MasterUser = () => import("@/views/master/user/Index")
+const MasterUserForm = () => import("@/views/master/user/Form")
+const MasterSubject = () => import("@/views/master/subject/Index")
+const MasterClassroom = () => import("@/views/master/classroom/Index")
+const MasterAcademic = () => import("@/views/master/academic/Index")
+
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: "/login",
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/d',
+    meta: { requiresAuth: true },
+    component: AppLayout,
+    children: [
+      {
+        path: 'm',
+        name: 'master.index',
+        component: MasterIndex
+      },
+      {
+        path: 'm/s',
+        name: 'master.student',
+        component: MasterStudent
+      },
+      {
+        path: 'm/s/c',
+        name: 'master.student.create',
+        component: MasterStudentForm
+      },
+      {
+        path: 'm/s/:id/u',
+        name: 'master.student.edit',
+        component: MasterStudentForm
+      },
+      {
+        path: 'm/m',
+        name: 'master.major',
+        component: MasterMajor
+      },
+      {
+        path: 'm/u',
+        name: 'master.user',
+        component: MasterUser
+      },
+      {
+        path: 'm/u/c',
+        name: 'master.user.create',
+        component: MasterUserForm
+      },
+      {
+        path: 'm/u/:id/u',
+        name: 'master.user.edit',
+        component: MasterUserForm
+      },
+      {
+        path: 'm/su',
+        name: 'master.subject',
+        component: MasterSubject
+      },
+      {
+        path: 'm/c',
+        name: 'master.classroom',
+        component: MasterClassroom
+      },
+      {
+        path: 'm/a',
+        name: 'master.academic',
+        component: MasterAcademic
+      }
+    ]
+  },
   {
     path: "/dump-login",
     name: "dump.login",
     component: DumpLogin
   },
   {
-    path: "/d",
+    path: "/f",
     component: AppLayout,
     children: [
       {

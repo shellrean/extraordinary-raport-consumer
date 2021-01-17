@@ -1,24 +1,83 @@
 <template>
-    <div>
-        <app-sidebar/>
-        <div class="c-wrapper">
-            <app-header />
-            <transition name="fade" mode="out-in">
-                <router-view />
-            </transition>
-            <app-footer />
-        </div >
+  <div class="h-screen overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
+    <section class="h-screen w-screen bg-gray-200 flex flex-col-reverse sm:flex-row min-h-0 min-w-0 overflow-hidden">
+      <aside class="sm:h-full sm:w-16 w-full h-12 bg-gray-800 text-gray-200">
+        <ul class="text-center flex flex-row sm:flex-col w-full">
+          <li class="h-14 border-b border-gray-900 hidden sm:block">
+            <a id="page-icon" href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+              <img class="object-contain h-full w-full" src="/img/logo.ico"
+                alt="" />
+            </a>
+          </li>
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
+            <router-link :to="{name: 'dump.master.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
+              <HomeIconLine class="mx-auto"/>
+            </router-link>
+          </li>
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
+            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+              <DatabaseIconLine class="mx-auto"/>
+            </a>
+          </li>
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
+            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+              <AttachmentIconLine class="mx-auto"/>
+            </a>
+          </li>
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
+            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+              <SettingIconLine class="mx-auto"/>
+            </a>
+          </li>
+        </ul>
+      </aside>
+      <main class="sm:h-full flex-1 flex flex-col min-h-0 min-w-0 overflow-auto">
+        <nav class="border-b-2 border-gray-300 bg-white px-6 py-2 flex items-center min-w-0 h-14">
+          <h1 class="font-semibold text-lg"></h1>
+          <span class="flex-1">
+         <!--    <span class="py-1 px-3 bg-yellow-300 rounded-full text-xs text-gray-500">Akademik Arsip 2019/2020</span> -->
+          <span class="py-1 sm:px-3 text-xs sm:text-sm font-semibold text-gray-500">Akademik 2020/2021 semester 1</span>
+          </span>
+          <span class="mr-2">
+          </span>
+          <button
+            class="ml-auto border rounded-full ml-2 w-10 h-10 text-center leading-none text-gray-200 bg-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+            <svg xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </button>
+        </nav>
+        <section class="flex-1 pt-3 md:p-6 lg:mb-0 lg:min-h-0 lg:min-w-0 overflow-y-scroll">
+          <router-view></router-view>
+        </section>
+        <footer class="px-6 py-3 border-t flex w-full items-end">
+          <p class="text-gray-600 text-xs">Powered by extraordinary-raport</p>
+        </footer>
+      </main>
+    </section>
+    <div class="absolute top-0 left-0 w-full">
+      <div class="flex justify-center">
+        <LoadBar v-if="isLoading" />
+      </div>
     </div>
+  </div>
 </template>
 <script>
-import AppSidebar from '@/components/AppSidebar.vue'
-import AppHeader from '@/components/AppHeader.vue'
-import AppFooter from '@/components/AppFooter.vue'
+import HomeIconLine from '@/components/icons/HomeIconLine'
+import SettingIconLine from '@/components/icons/SettingIconLine'
+import DatabaseIconLine from '@/components/icons/DatabaseIconLine'
+import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
+import LoadBar from '@/components/nano/LoadBar'
+import { mapState } from 'vuex'
 export default {
-    components: {
-        AppHeader,
-        AppSidebar,
-        AppFooter
-    }
-}
+  name: 'App',
+  components: {
+    HomeIconLine,
+    SettingIconLine,
+    DatabaseIconLine,
+    AttachmentIconLine,
+    LoadBar
+  },
+  computed: {
+    ...mapState(['isLoading']),
+  }
+};
 </script>
