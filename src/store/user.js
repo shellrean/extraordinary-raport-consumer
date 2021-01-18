@@ -85,7 +85,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                let network = await $axios.post(`users/`, state.user)
+                let network = await $axios.post(`users/user`, state.user)
 
                 commit('_set_loading', false, { root: true })
                 commit('_clear_user_form_data')
@@ -112,7 +112,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                let network = await $axios.put(`users/${state.user.id}`, state.user)
+                let network = await $axios.put(`users/user/${state.user.id}`, state.user)
 
                 commit('_set_loading', false, { root: true })
                 commit('_clear_user_form_data')
@@ -139,7 +139,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                let network = await $axios.get(`users/${payload}`)
+                let network = await $axios.get(`users/user/${payload}`)
 
                 if (network.data.success) {
                     commit('_set_user_form_data', network.data.data)
@@ -168,7 +168,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                let network = await $axios.delete(`users/${payload}`)
+                let network = await $axios.delete(`users/user/${payload}`)
 
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
@@ -189,7 +189,33 @@ const actions = {
                 commit('_set_loading', false, { root: true })
             }
         })
-    }
+    },
+    deleteUsers({ commit }, ids = []) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                commit('_set_loading', true, { root: true })
+                let network = await $axios.delete(`users/delete?q=${ids.join(",")}`)
+
+                commit('_set_loading', false, { root: true })
+                resolve(network.data)
+            } catch (error) {
+                if (typeof error.response != 'undefined') {
+                    if (typeof error.response.data != 'undefined') {
+                        if (typeof error.response.data.error_code != 'undefined') {
+                            reject({message: error.response.data.message})
+                        } else {
+                            reject(Message.ErrUnExHappen)
+                        }
+                    } else {
+                        reject(Message.ErrUnExHappen)
+                    }
+                } else {
+                    reject(Message.ErrNotSendRequest)
+                }
+                commit('_set_loading', false, { root: true })
+            }
+        })
+    },
 }
 
 export default {
