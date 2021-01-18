@@ -26,6 +26,7 @@ const MasterStudentForm = () => import("@/views/master/student/Form")
 const MasterMajor = () => import("@/views/master/major/Index")
 const MasterUser = () => import("@/views/master/user/Index")
 const MasterUserForm = () => import("@/views/master/user/Form")
+const MasterUserImport = () => import("@/views/master/user/Import")
 const MasterSubject = () => import("@/views/master/subject/Index")
 const MasterClassroom = () => import("@/views/master/classroom/Index")
 const MasterAcademic = () => import("@/views/master/academic/Index")
@@ -82,6 +83,11 @@ const routes = [
         path: 'm/u/:id/u',
         name: 'master.user.edit',
         component: MasterUserForm
+      },
+      {
+        path: 'm/u/i',
+        name: 'master.user.import',
+        component: MasterUserImport
       },
       {
         path: 'm/su',
