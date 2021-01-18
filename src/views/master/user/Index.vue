@@ -36,9 +36,9 @@
       </div>
       <div class="bg-white py-2 flex justify-between px-2 rounded-b-lg mb-2 border border-gray-300 shadow">
         <div>
-          <button class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-l border-t border-b border-gray-300" @click="clearSelected" :disabled="selected.length == 0">Clear</button>
+          <button class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-l border-t border-b border-gray-300" @click="clearSelected" :disabled="selected.length === 0">Clear</button>
           <button class="py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200  disabled:opacity-50 text-white border-t border-b border-gray-300" @click="selectAllRows" :disabled="selected.length == (users != null ? users.length : 0)">Pilih semua</button>
-          <button class="rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-r border-t border-b border-gray-300">Hapus</button>
+          <button class="rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-r border-t border-b border-gray-300" @click="deleteMultipleUsers" :disabled="selected.length === 0">Hapus</button>
         </div>
         <div>
           <button :disabled="isLoading || cursor.prev.length == 1"  class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border-l border-b border-gray-300"  @click="prevPage">Kembali</button>
@@ -79,7 +79,7 @@ export default {
     ...mapState('user', ['users','users','cursor']),
   },
   methods: {
-    ...mapActions('user',['fetchUsers', 'deleteUser']),
+    ...mapActions('user',['fetchUsers', 'deleteUser', 'deleteUsers']),
     selectAllRows() {
       this.selected = this.users.map((item) => item.id)
     },
@@ -97,6 +97,7 @@ export default {
       }
     },
     prevPage() {
+      this.clearSelected()
       (async () => {
         try {
           await this.fetchUsers({reverse: true })
@@ -113,6 +114,7 @@ export default {
       })()
     },
     nextPage() {
+      this.clearSelected()
       (async () => {
         try {
           await this.fetchUsers()
@@ -143,6 +145,35 @@ export default {
             await this.deleteUser(id)
             this.users.splice(index, 1)
             this.$swal('Sukses', 'Pengguna berhasil dihapus', 'success');
+          } catch (err) {
+            let id = new Date().getTime()
+            this.notif.push({id: id, msg: err.message})
+            let idx = this.notif.map((item) => item.id).indexOf(id)
+            if(idx !== -1) {
+              setTimeout(() => { 
+                this.notif.splice(idx, 1)
+              }, 3000);
+            }
+          }
+        }
+      })
+    },
+    deleteMultipleUsers() {
+      this.$swal({
+        title: 'Peringatan',
+        text: `${this.selected.length } pengguna akan dihapus berserta data yang terkait`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#c7c7c7',
+        confirmButtonText: 'Iya, Lanjutkan!'
+      }).then(async (result) => {
+        if (result.value) {
+          try {
+            await this.deleteUsers(this.selected)
+            this.$swal('Sukses', 'Pengguna berhasil dihapus', 'success')
+            this.$store.commit('user/_reset_user_cursor')
+            await this.fetchUsers()
           } catch (err) {
             let id = new Date().getTime()
             this.notif.push({id: id, msg: err.message})
