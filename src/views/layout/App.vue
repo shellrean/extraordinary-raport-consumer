@@ -9,22 +9,22 @@
                 alt="" />
             </a>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
-            <router-link :to="{name: 'dump.master.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Beranda">
+            <router-link to="/" class="h-full w-full hover:bg-gray-700 block p-3">
               <HomeIconLine class="mx-auto"/>
             </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
-            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Dunia">
+            <router-link :to="{name: 'master.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
               <DatabaseIconLine class="mx-auto"/>
-            </a>
+            </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
-            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Akademik">
+            <router-link :to="{name: 'academic.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
               <AttachmentIconLine class="mx-auto"/>
-            </a>
+            </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Inbox">
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
             <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
               <SettingIconLine class="mx-auto"/>
             </a>
