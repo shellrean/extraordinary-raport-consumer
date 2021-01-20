@@ -31,6 +31,10 @@ const MasterSubject = () => import("@/views/master/subject/Index")
 const MasterClassroom = () => import("@/views/master/classroom/Index")
 const MasterAcademic = () => import("@/views/master/academic/Index")
 
+const AcademicIndex = () => import("@/views/academic/Index")
+const AcademicClassroom = () => import("@/views/academic/classroom/Index")
+const AcademicClassroomForm = () => import("@/views/academic/classroom/Form")
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -103,6 +107,21 @@ const routes = [
         path: 'm/a',
         name: 'master.academic',
         component: MasterAcademic
+      },
+      {
+        path:'a',
+        name: 'academic.index',
+        component: AcademicIndex
+      },
+      {
+        path: 'a/c',
+        name: 'academic.classroom',
+        component: AcademicClassroom
+      },
+      {
+        path: 'a/c/c',
+        name: 'academic.classroom.create',
+        component: AcademicClassroomForm
       }
     ]
   },
