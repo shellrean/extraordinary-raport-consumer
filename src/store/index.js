@@ -9,6 +9,7 @@ import major from './major'
 import subject from './subject'
 import classroom from './classroom'
 import academic from './academic'
+import academic_classroom from './academic_classroom'
 
 Vue.use(Vuex)
 
@@ -36,8 +37,8 @@ export default new Vuex.Store({
     _set_errors(state, payload) {
       state.errors = payload
     },
-    _clear_errors(state) {
-      state.errors = []
+    _clear_errors({ errors }) {
+      errors = []
     },
     _loading_page(state, payload) {
       state.loadPage = payload
@@ -57,6 +58,7 @@ export default new Vuex.Store({
     major,
     subject,
     classroom,
-    academic
+    academic,
+    academic_classroom,
   }
 })
