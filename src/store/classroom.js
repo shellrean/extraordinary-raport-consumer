@@ -16,7 +16,7 @@ const mutations = {
 }
 
 const actions = {
-    fetchClassrooms({ commit, state }) {
+    fetchClassrooms({ commit }) {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
