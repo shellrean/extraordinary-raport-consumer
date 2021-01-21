@@ -29,14 +29,19 @@
               <SettingIconLine class="mx-auto"/>
             </a>
           </li>
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
+            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+              <LogoutIconLine class="mx-auto"/>
+            </a>
+          </li>
         </ul>
       </aside>
       <main class="sm:h-full flex-1 flex flex-col min-h-0 min-w-0 overflow-auto">
-        <nav class="border-b-2 border-gray-300 bg-white px-6 py-2 flex items-center min-w-0 h-14">
+        <nav class="border-b-2 border-gray-300 bg-white px-2 sm:px-6 py-2 flex items-center min-w-0 h-14">
           <h1 class="font-semibold text-lg"></h1>
           <span class="flex-1">
-         <!--    <span class="py-1 px-3 bg-yellow-300 rounded-full text-xs text-gray-500">Akademik Arsip 2019/2020</span> -->
-          <span class="py-1 sm:px-3 text-xs sm:text-sm font-semibold text-gray-500">Akademik 2020/2021 semester 1</span>
+            <span class="py-1 sm:px-3 text-xs sm:text-sm font-semibold text-gray-500" v-if="academic.id == academics[academics.length - 1]">Akademik {{ academic.name }} semester {{ academic.semester }}</span>
+            <span class="py-1 px-3 bg-yellow-300 rounded-full text-xs text-gray-500" v-else>Akademik Arsip {{ academic.name }} semester {{ academic.semester }}</span>
           </span>
           <span class="mr-2">
           </span>
@@ -58,6 +63,11 @@
         <LoadBar v-if="isLoading" />
       </div>
     </div>
+    <div class="absolute left-4 bottom-4 xl:left-10 xl:bottom-10">
+      <div class="flex flex-col space-y-2">
+        <Notif :msg="val.msg" v-for="val in notif" :key="val.id"/>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -65,8 +75,11 @@ import HomeIconLine from '@/components/icons/HomeIconLine'
 import SettingIconLine from '@/components/icons/SettingIconLine'
 import DatabaseIconLine from '@/components/icons/DatabaseIconLine'
 import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
+import LogoutIconLine from '@/components/icons/LogoutIconLine'
 import LoadBar from '@/components/nano/LoadBar'
-import { mapState } from 'vuex'
+import Notif from '@/components/nano/Notif'
+import Notify from '@/core/services/notif.service'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'App',
   components: {
@@ -74,10 +87,62 @@ export default {
     SettingIconLine,
     DatabaseIconLine,
     AttachmentIconLine,
-    LoadBar
+    LogoutIconLine,
+    LoadBar,
+    Notif
+  },
+  data() {
+    return {
+      notif: [],
+      academic: {}
+    }
   },
   computed: {
     ...mapState(['isLoading']),
+    ...mapState('sett', ['settings']),
+    ...mapState('academic', ['academics']),
+  },
+  methods: {
+    ...mapActions(['setAcademicYear']),
+    ...mapActions('sett', ['fetchSettings']),
+    ...mapActions('academic',['fetchAcademics']),
+    fetchData() {
+      (async() => {
+        try {
+          await this.fetchSettings(['academic_active'])
+        } catch (err) {
+          Notify.createNotif({msg: err.message, notif: this.notif})
+        }
+      })()
+    },
+    fetchDataAcademics() {
+      (async() => {
+        try {
+          await this.fetchAcademics()
+        } catch (err) {
+          Notify.createNotif({msg: err.message, notif: this.notif})
+        }
+      })()
+    }
+  },
+  created() {
+    this.fetchData()
+    this.fetchDataAcademics()
+  },
+  mounted() {
+    
+  },
+  watch: {
+    academics(val) {
+      const set_academic = this.settings.filter((item) => item.name == 'academic_active')
+      if (set_academic.length > 0) {
+        const academic = this.academics.filter((item) => item.id == set_academic[0].value)
+        if (academic.length > 0) {
+          this.academic = academic[0]
+          this.setAcademicYear(this.academic)
+        }
+      }
+    }
   }
 };
 </script>
