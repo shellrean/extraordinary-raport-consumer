@@ -31,6 +31,7 @@
 </template>
 <script>
 import Notif from '@/components/nano/Notif'
+import Notify from '@/core/services/notif.service'
 import MasterMenus from '@/components/MasterMenus'
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 export default {
@@ -55,14 +56,7 @@ export default {
       try {
         await this.fetchClassrooms()
       } catch (err) {
-        let id = new Date().getTime()
-        this.notif.push({id: id, msg: err.message})
-        let idx = this.notif.map((item) => item.id).indexOf(id)
-        if(idx !== -1) {
-          setTimeout(() => { 
-            this.notif.splice(idx, 1)
-          }, 3000);
-        }
+        Notify.createNotif({msg: err.message, notif: this.notif})
       }
     })()
   }
