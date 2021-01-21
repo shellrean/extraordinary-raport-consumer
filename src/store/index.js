@@ -20,7 +20,8 @@ export default new Vuex.Store({
     loadPage: false,
     access_token: localStorage.getItem('access_token'),
     refresh_token: localStorage.getItem('refresh_token'),
-    baseURL: process.env.VUE_APP_URL
+    baseURL: process.env.VUE_APP_URL,
+    academic_active: {}
   },
   getters: {
     isAuth: state => {
@@ -48,6 +49,14 @@ export default new Vuex.Store({
     },
     _set_baseurl(state, payload) {
       state.baseURL = payload
+    },
+    _set_academic_year(state, payload) {
+      state.academic_active = payload
+    }
+  },
+  actions: {
+    setAcademicYear({ commit }, payload) {
+      commit('_set_academic_year', payload)
     }
   },
   modules: {
