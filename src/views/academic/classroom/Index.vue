@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="max-h-96 overflow-y-scroll">
-        <div class="bg-white mb-2 border border-gray-300 shadow rounded-lg transition duration-500 hover:shadow-xl cursor-pointer" v-for="classroom in filteredClassroom">
+        <router-link :to="{name: 'academic.classroom.detail', params: {id: classroom.id}}" class="block bg-white mb-2 border border-gray-300 shadow rounded-lg transition duration-500 hover:shadow-xl cursor-pointer" v-for="(classroom, index) in filteredClassroom" :key="index">
           <div class="flex flex-col sm:flex-row py-2 sm:justify-between sm:items-center">
             <div>
               <div class="px-3 font-semibold text-gray-700">{{ classroom.classroomName }}</div>
@@ -25,7 +25,7 @@
             </div>
             <span class="px-3 text-gray-500 text-sm">{{ classroom.teacherName }}</span>
           </div>
-        </div>
+        </router-link>
       </div>
       <div class="bg-white py-2 px-2 border border-gray-300 shadow rounded-b-lg mb-2">
         <router-link :to="{name: 'academic.classroom.create'}" class="py-1 px-4 border-gray-300 border bg-gray-100 text-gray-600 rounded-md hover:shadow-md">Buat kelas akademik</router-link>
