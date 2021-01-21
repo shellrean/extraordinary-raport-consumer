@@ -44,6 +44,34 @@ const actions = {
             }
         })
     },
+    showClassroom({ commit}, classroomID) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                commit('_set_loading', true, { root: true })
+                const network = await $axios.get(`classroom-academics/${classroomID}`)
+                if (network.data.success) {
+                    commit('_set_classroom_form_data', network.data.data)
+                }
+                commit('_set_loading', false, { root: true })
+                resolve(network.data)
+            } catch (error) {
+                if (typeof error.response != 'undefined') {
+                    if (typeof error.response.data != 'undefined') {
+                        if (typeof error.response.data.error_code != 'undefined') {
+                            reject({message: error.response.data.message})
+                        } else {
+                            reject(Message.ErrUnExHappen)
+                        }
+                    } else {
+                        reject(Message.ErrUnExHappen)
+                    }
+                } else {
+                    reject(Message.ErrNotSendRequest)
+                }
+                commit('_set_loading', false, { root: true })
+            }
+        })
+    },
     storeClassroom({ commit, state }) {
         return new Promise(async (resolve, reject) => {
             try {
