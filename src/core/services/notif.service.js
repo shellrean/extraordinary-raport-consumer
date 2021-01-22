@@ -1,6 +1,6 @@
 class Notif {
     static createID() {
-        return new Date().getTime()
+        return `${new Date().getTime()}-${Math.random()}`
     }
 
     static createNotif(params = { msg: "", notif: [] }) {
@@ -14,6 +14,15 @@ class Notif {
         if (idx !== -1) {
             setTimeout(() => { notif.splice(idx, 1) }, 3000)
         }
+    }
+
+    constructor(code, message) {
+        this.code = code
+        this.message = message
+    }
+
+    sweetAlertNotif(vue) {
+        vue.$swal('Kesalahan '+this.code, this.message,'error')
     }
 }
 

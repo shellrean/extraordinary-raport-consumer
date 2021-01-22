@@ -10,6 +10,8 @@ import subject from './subject'
 import classroom from './classroom'
 import academic from './academic'
 import academic_classroom from './academic_classroom'
+import academic_student from './academic_student'
+import academic_subject from './academic_subject'
 
 Vue.use(Vuex)
 
@@ -69,5 +71,7 @@ export default new Vuex.Store({
     classroom,
     academic,
     academic_classroom,
+    academic_student,
+    academic_subject,
   }
 })

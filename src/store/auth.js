@@ -1,4 +1,5 @@
 import $axios from '@/core/services/api.service.js'
+import Message from '@/core/domain/message.domain.js'
 
 const actions = {
     submit({ commit }, payload) {
@@ -36,13 +37,13 @@ const actions = {
                                 reject({message: error.response.data.message})
                             }
                         } else {
-                            reject({message: 'Terjadi kesalahan yang tidak dapat dijelaskan'})
+                            reject(Message.ErrUnExHappen)
                         }
                     } else {
-                        reject({message: 'Terjadi kesalahan yang tidak dapat dijelaskan'})
+                        reject(Message.ErrUnExHappen)
                     }
                 } else {
-                    reject({message: 'Terjadi kesalahan saat mengirim request ke server'})
+                    reject(Message.ErrNotSendRequest)
                 }
                 commit('_set_loading', false, { root: true })
             }

@@ -2,27 +2,27 @@ import $axios from '@/core/services/api.service.js'
 import Message from '@/core/domain/message.domain.js'
 
 const state = () => ({
-    classrooms: [],
-    classroom: {}
+    students: [],
+    student: {}
 })
 
 const mutations = {
-    _assign_classrooms_data(state, payload) {
-        state.classrooms = payload
+    _assign_students_data(state, payload) {
+        state.students = payload
     },
-    _set_classroom_form_data(state, payload) {
-        state.classroom = payload
+    _set_student_form_data(state, payload) {
+        state.student = payload
     }
 }
 
 const actions = {
-    fetchClassrooms({ commit }) {
+    fetchStudentsByClassroomAcademic({ commit }, classroomAcademicID) {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.get(`classroom-academics/`)
+                const network = await $axios.get(`classroom-students/classroom/${classroomAcademicID}`)
                 if (network.data.success) {
-                    commit('_assign_classrooms_data', network.data.data)
+                    commit('_assign_students_data', network.data.data == null ? [] : network.data.data)
                 }
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
@@ -44,14 +44,12 @@ const actions = {
             }
         })
     },
-    showClassroom({ commit}, classroomID) {
+    storeStudent({ commit, state }) {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.get(`classroom-academics/${classroomID}`)
-                if (network.data.success) {
-                    commit('_set_classroom_form_data', network.data.data)
-                }
+                const network = await $axios.post(`classroom-students/classroom-student`, state.student)
+            
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
             } catch (error) {
@@ -72,67 +70,12 @@ const actions = {
             }
         })
     },
-    storeClassroom({ commit, state }) {
+    deleteStudent({ commit }, studentAcademicID) {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.post(`classroom-academics/`, state.classroom)
-                
-                commit('_set_loading', false, { root: true })
-                resolve(network.data)
-            } catch (error) {
-                if (typeof error.response != 'undefined') {
-                    if (typeof error.response.data != 'undefined') {
-                        if (typeof error.response.data.error_code != 'undefined') {
-                            reject(error.response.data)
-                        } else {
-                            reject(Message.ErrUnExHappen)
-                        }
-                    } else {
-                        reject(Message.ErrUnExHappen)
-                    }
-                } else {
-                    reject(Message.ErrNotSendRequest)
-                }
-                commit('_set_loading', false, { root: true })
-            }
-        })
-    },
-    updateClassroom({ commit, state }) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                commit('_set_loading', true, { root: true })
-                const network = await $axios.put(`classroom-academics/${state.classroom.id}`, state.classroom)
-                
-                if (network.data.success) {
-                    commit('_set_classroom_form_data', network.data.data)
-                }
-                commit('_set_loading', false, { root: true })
-                resolve(network.data)
-            } catch (error) {
-                if (typeof error.response != 'undefined') {
-                    if (typeof error.response.data != 'undefined') {
-                        if (typeof error.response.data.error_code != 'undefined') {
-                            reject(error.response.data)
-                        } else {
-                            reject(Message.ErrUnExHappen)
-                        }
-                    } else {
-                        reject(Message.ErrUnExHappen)
-                    }
-                } else {
-                    reject(Message.ErrNotSendRequest)
-                }
-                commit('_set_loading', false, { root: true })
-            }
-        })
-    },
-    deleteClassroom({ commit }, classroomAcademicID) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                commit('_set_loading', true, { root: true })
-                const network = await $axios.delete(`classroom-academics/${classroomAcademicID}`)
-                
+                const network = await $axios.delete(`classroom-students/classroom-student/${studentAcademicID}`)
+            
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
             } catch (error) {

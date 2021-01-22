@@ -33,23 +33,17 @@
         </div>
       </div>
     </div>
-    <div class="absolute left-4 bottom-4 xl:left-10 xl:bottom-10">
-      <div class="flex flex-col space-y-2">
-        <Notif :msg="val.msg" v-for="val in notif" :key="val.id"/>
-      </div>
-    </div>
   </div>
 </template>
 <script>
-import Notif from '@/components/nano/Notif'
 import Notify from '@/core/services/notif.service'
+import Message from '@/core/domain/message.domain'
 import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
 
 export default {
   name: 'ClassroomForm',
   components: {
-    Notif,
   },
   data() {
     return {
@@ -67,13 +61,21 @@ export default {
   },
   methods: {
     ...mapActions('classroom',['fetchClassrooms']),
-    ...mapActions('user',['fetchUsers']),
+    ...mapActions('user',['fetchUsers', 'showUser']),
+    ...mapActions('academic_classroom', ['showClassroom']),
+    showError(err) {
+      const error = new Message(err)
+      const message = error.getMessage()
+      const code = error.getCode()
+      const notification = new Notify(code, message)
+      notification.sweetAlertNotif(this)
+    },
     fetchDataClassrooms() {
       (async () => {
         try {
           await this.fetchClassrooms()
         } catch (err) {
-          Notify.createNotif({msg: err.message, notif: this.notif})
+          this.showError(err)
         }
       })()
     },
@@ -83,7 +85,7 @@ export default {
           this.$store.commit('user/_reset_user_cursor')
           await this.fetchUsers()
         } catch (err) {
-          Notify.createNotif({msg: err.message, notif: this.notif})
+          this.showError(err)
         }
       })()
     },
@@ -96,9 +98,15 @@ export default {
     this.fetchDataClassrooms()
     this.fetchDataTeachers()
     if(this.$route.name == 'academic.classroom.edit') {
-
-    } else {
-
+      (async() => {
+        try {
+          await this.showClassroom(this.$route.params.id)
+          const provider = await this.showUser(this.$store.state.academic_classroom.classroom.teacherID)
+          this.teacher = provider.data
+        } catch (err) {
+          this.showError(err)
+        }
+      })()
     }
   },
   watch: {
@@ -107,7 +115,7 @@ export default {
         this.$store.commit('user/_reset_user_cursor')
         this.fetchUsers({ search: this.search_teacher })
       } catch (err) {
-        Notify.createNotif({msg: err.message, notif: this.notif})
+        this.showError(err)
       }
     }, 500),
     teacher(val) {

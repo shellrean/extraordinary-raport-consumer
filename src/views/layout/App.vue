@@ -25,9 +25,9 @@
             </router-link>
           </li>
           <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
-            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+            <router-link :to="{name: 'setting.index'}" class="h-full w-full hover:bg-gray-700 block p-3">
               <SettingIconLine class="mx-auto"/>
-            </a>
+            </router-link>
           </li>
           <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
             <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
@@ -63,11 +63,6 @@
         <LoadBar v-if="isLoading" />
       </div>
     </div>
-    <div class="absolute left-4 bottom-4 xl:left-10 xl:bottom-10">
-      <div class="flex flex-col space-y-2">
-        <Notif :msg="val.msg" v-for="val in notif" :key="val.id"/>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -77,8 +72,8 @@ import DatabaseIconLine from '@/components/icons/DatabaseIconLine'
 import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
 import LogoutIconLine from '@/components/icons/LogoutIconLine'
 import LoadBar from '@/components/nano/LoadBar'
-import Notif from '@/components/nano/Notif'
 import Notify from '@/core/services/notif.service'
+import Message from '@/core/domain/message.domain'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'App',
@@ -89,7 +84,6 @@ export default {
     AttachmentIconLine,
     LogoutIconLine,
     LoadBar,
-    Notif
   },
   data() {
     return {
@@ -106,12 +100,19 @@ export default {
     ...mapActions(['setAcademicYear']),
     ...mapActions('sett', ['fetchSettings']),
     ...mapActions('academic',['fetchAcademics']),
+    showError(err) {
+      const error = new Message(err)
+      const message = error.getMessage()
+      const code = error.getCode()
+      const notification = new Notify(code, message)
+      notification.sweetAlertNotif(this)
+    },
     fetchData() {
       (async() => {
         try {
           await this.fetchSettings(['academic_active'])
         } catch (err) {
-          Notify.createNotif({msg: err.message, notif: this.notif})
+          this.showError(err)
         }
       })()
     },
@@ -120,9 +121,19 @@ export default {
         try {
           await this.fetchAcademics()
         } catch (err) {
-          Notify.createNotif({msg: err.message, notif: this.notif})
+          this.showError(err)
         }
       })()
+    },
+    setAcademic() {
+      const set_academic = this.settings.filter((item) => item.name == 'academic_active')
+      if (set_academic.length > 0) {
+        const academic = this.academics.filter((item) => item.id == set_academic[0].value)
+        if (academic.length > 0) {
+          this.academic = academic[0]
+          this.setAcademicYear(this.academic)
+        }
+      }
     }
   },
   created() {
@@ -134,13 +145,13 @@ export default {
   },
   watch: {
     academics(val) {
-      const set_academic = this.settings.filter((item) => item.name == 'academic_active')
-      if (set_academic.length > 0) {
-        const academic = this.academics.filter((item) => item.id == set_academic[0].value)
-        if (academic.length > 0) {
-          this.academic = academic[0]
-          this.setAcademicYear(this.academic)
-        }
+      if(this.settings.length > 0) {
+        this.setAcademic()
+      }
+    },
+    settings(val) {
+      if(this.academics.length > 0) {
+        this.setAcademic()
       }
     }
   }

@@ -5,26 +5,20 @@
       <form @submit.prevent="submit">
         <ClassroomForm />
         <router-link :to="{name: 'academic.classroom' }" class="inline-block mr-1 rounded-md py-1 px-3 bg-gray-400 border-2 border-gray-500 hover:shadow-xl disabled:opacity-50 text-white font-medium">Kembali</router-link>
-        <button type="submit" class="py-1 px-3 rounded-md bg-green-400 border-2 border-green-500 hover:shadow-xl disabled:opacity-50 text-white font-medium">{{ isLoading ? 'Processing...' : 'Simpan' }}</button> 
+        <button :disabled="isLoading" type="submit" class="py-1 px-3 rounded-md bg-green-400 border-2 border-green-500 hover:shadow-xl disabled:opacity-50 text-white font-medium">Simpan</button> 
       </form>
-    </div>
-    <div class="absolute left-4 bottom-4 xl:left-10 xl:bottom-10">
-      <div class="flex flex-col space-y-2">
-        <Notif :msg="val.msg" v-for="val in notif" :key="val.id"/>
-      </div>
     </div>
   </div>
 </template>
 <script>
-import Notif from '@/components/nano/Notif'
 import Notify from '@/core/services/notif.service'
+import Message from '@/core/domain/message.domain'
 import ClassroomForm from './ClassroomForm'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'AcademicClassroomForm',
   components: {
     ClassroomForm,
-    Notif,
   },
   data() {
     return {
@@ -36,7 +30,14 @@ export default {
     ...mapState('academic_classroom', ['classroom'])
   },
   methods: {
-    ...mapActions('academic_classroom', ['storeClassroom']),
+    ...mapActions('academic_classroom', ['storeClassroom', 'updateClassroom']),
+    showError(err) {
+      const error = new Message(err)
+      const message = error.getMessage()
+      const code = error.getCode()
+      const notification = new Notify(code, message)
+      notification.sweetAlertNotif(this)
+    },
     submit() {
       if(typeof this.classroom.id == 'undefined') {
         (async () => {
@@ -44,11 +45,19 @@ export default {
             await this.storeClassroom()
             this.$router.push({name: 'academic.classroom'})
           } catch (err) {
-            Notify.createNotif({msg: err.message, notif: this.notif})
+            this.showError(err)
           }
         })()
       } else {
-
+        (async () => {
+          try {
+            await this.updateClassroom()
+            this.$store.state.academic_classroom.classroom = {}
+            this.$router.push({name: 'academic.classroom'})
+          } catch (err) {
+            this.showError(err)
+          }
+        })()
       }
     }
   }

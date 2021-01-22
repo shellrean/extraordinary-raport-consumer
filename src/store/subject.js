@@ -16,7 +16,7 @@ const mutations = {
 }
 
 const actions = {
-    fetchSubjects({ commit, state }) {
+    fetchSubjects({ commit }) {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
@@ -30,7 +30,7 @@ const actions = {
                 if (typeof error.response != 'undefined') {
                     if (typeof error.response.data != 'undefined') {
                         if (typeof error.response.data.error_code != 'undefined') {
-                            reject({message: error.response.data.message})
+                            reject(error.response.data)
                         } else {
                             reject(Message.ErrUnExHappen)
                         }

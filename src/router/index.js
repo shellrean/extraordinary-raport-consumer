@@ -36,6 +36,9 @@ const AcademicClassroom = () => import("@/views/academic/classroom/Index")
 const AcademicClassroomForm = () => import("@/views/academic/classroom/Form")
 const AcademicClassroomDetail = () => import("@/views/academic/classroom/Detail")
 const AcademicClassroomSubject = () => import("@/views/academic/classroom/FormSubject")
+const AcademicClassroomStudent = () => import("@/views/academic/classroom/FormStudent")
+
+const SettingIndex = () => import("@/views/sett/Index")
 
 Vue.use(VueRouter)
 
@@ -126,6 +129,11 @@ const routes = [
         component: AcademicClassroomForm
       },
       {
+        path: 'a/c/:id/u',
+        name: 'academic.classroom.edit',
+        component: AcademicClassroomForm
+      },
+      {
         path: 'a/c/:id/d',
         name: 'academic.classroom.detail',
         component: AcademicClassroomDetail
@@ -134,6 +142,16 @@ const routes = [
         path: 'a/c/:id/su',
         name: 'academic.classroom.subject',
         component: AcademicClassroomSubject
+      },
+      {
+        path: 'a/c/:id/s',
+        name: 'academic.classroom.student',
+        component: AcademicClassroomStudent
+      },
+      {
+        path: 's',
+        name: 'setting.index',
+        component: SettingIndex
       }
     ]
   },
