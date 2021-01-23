@@ -60,11 +60,11 @@
                   <input v-model="searchAcademic" class="w-full rounded-md bg-gray-200 text-gray-700 leading-tight focus:outline-none py-2 px-2" type="text" placeholder="Cari tahun ajaran">
                 </div>
                 <div class="py-3 text-sm">
-                  <div v-for="(academic, index) in academics" @click="setAcademik(academic)" class="flex items-center justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2">
+                  <div v-for="(academic, index) in filteredAcademic" @click="setAcademik(academic)" class="flex items-center justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2">
                     <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
                     <div class="flex-grow font-medium px-2">{{ academic.name }} Semester {{ academic.semester }}</div>
                   </div>
-                  <small v-if="academics === null || academics.length === 0" class="text-gray-600">Tahun ajaran tidak ditemukan</small>
+                  <small v-if="filteredAcademic === null || filteredAcademic.length === 0" class="text-gray-600">Tahun ajaran tidak ditemukan</small>
                 </div>
               </div>
             </div>
@@ -90,11 +90,11 @@
                   <input v-model="searchClassroom" class="w-full rounded-md bg-gray-200 text-gray-700 leading-tight focus:outline-none py-2 px-2" type="text" placeholder="Cari kelas Akademik">
                 </div>
                 <div class="py-3 text-sm">
-                  <div v-for="(classroom, index) in classrooms" @click="setClassroom(classroom)" class="flex items-center justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2">
+                  <div v-for="(classroom, index) in filteredClassroom" @click="setClassroom(classroom)" class="flex items-center justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2">
                     <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
                     <div class="flex-grow font-medium px-2">{{ classroom.classroomName }}/{{ classroom.classroomMajor }}</div>
                   </div>
-                  <small v-if="classrooms === null || classrooms.length === 0" class="text-gray-600">Kelas akademik tidak ditemukan</small>
+                  <small v-if="filteredClassroom === null || filteredClassroom.length === 0" class="text-gray-600">Kelas akademik tidak ditemukan</small>
                 </div>
               </div>
             </div>
@@ -153,6 +153,18 @@ export default {
     ...mapState('student', ['students', 'student']),
     ...mapState('academic', ['academics']),
     ...mapState('academic_classroom', ['classrooms']),
+    filteredAcademic() {
+      if(this.academics == null) {
+        return []
+      }
+      return this.academics.filter((item) => item.name.toLowerCase().includes(this.searchAcademic.toLowerCase()))
+    },
+    filteredClassroom() {
+      if(this.classrooms == null) {
+        return []
+      }
+      return this.classrooms.filter((item) => item.classroomName.toLowerCase().includes(this.searchClassroom.toLowerCase()))
+    }
   },
   methods: {
     ...mapActions('academic_classroom', ['showClassroom', 'fetchClassroomsByAcademic']),
@@ -237,7 +249,7 @@ export default {
     copyClassroomStudent() {
       this.$swal({
         title: 'Informasi',
-        text: "Siswa pada kelas akademik yang dipilih akan disalin ke kelas ini, aksi ini tidak mencegah duplikasi, cek kembali setelah data diterima",
+        text: "Siswa pada kelas akademik yang dipilih akan disalin ke kelas ini, aksi ini tidak mencegah duplikasi, cek kembali setelah data diterima. Tindakan ini tidak akan menghapus data yang sudah ada sebelumnya",
         icon: 'info',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
