@@ -44,11 +44,39 @@ const actions = {
             }
         })
     },
+    fetchClassroomsByAcademic({ commit }, academicID) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                commit('_set_loading', true, { root: true })
+                const network = await $axios.get(`classroom-academics/academic/${academicID}`)
+                if (network.data.success) {
+                    commit('_assign_classrooms_data', network.data.data)
+                }
+                commit('_set_loading', false, { root: true })
+                resolve(network.data)
+            } catch (error) {
+                if (typeof error.response != 'undefined') {
+                    if (typeof error.response.data != 'undefined') {
+                        if (typeof error.response.data.error_code != 'undefined') {
+                            reject(error.response.data)
+                        } else {
+                            reject(Message.ErrUnExHappen)
+                        }
+                    } else {
+                        reject(Message.ErrUnExHappen)
+                    }
+                } else {
+                    reject(Message.ErrNotSendRequest)
+                }
+                commit('_set_loading', false, { root: true })
+            }
+        })
+    },
     showClassroom({ commit}, classroomID) {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.get(`classroom-academics/${classroomID}`)
+                const network = await $axios.get(`classroom-academics/classroom-academic/${classroomID}`)
                 if (network.data.success) {
                     commit('_set_classroom_form_data', network.data.data)
                 }
@@ -76,7 +104,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.post(`classroom-academics/`, state.classroom)
+                const network = await $axios.post(`classroom-academics/classroom-academic`, state.classroom)
                 
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)
@@ -102,7 +130,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.put(`classroom-academics/${state.classroom.id}`, state.classroom)
+                const network = await $axios.put(`classroom-academics/classroom-academic/${state.classroom.id}`, state.classroom)
                 
                 if (network.data.success) {
                     commit('_set_classroom_form_data', network.data.data)
@@ -131,7 +159,7 @@ const actions = {
         return new Promise(async (resolve, reject) => {
             try {
                 commit('_set_loading', true, { root: true })
-                const network = await $axios.delete(`classroom-academics/${classroomAcademicID}`)
+                const network = await $axios.delete(`classroom-academics/classroom-academic/${classroomAcademicID}`)
                 
                 commit('_set_loading', false, { root: true })
                 resolve(network.data)

@@ -70,6 +70,32 @@ const actions = {
             }
         })
     },
+    copyStudents({ commit }, params = {classroomAcademicID: 0, toClassroomAcademicID: 0}) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                commit('_set_loading', true, { root: true })
+                const network = await $axios.post(`classroom-students/copy-students`, params)
+            
+                commit('_set_loading', false, { root: true })
+                resolve(network.data)
+            } catch (error) {
+                if (typeof error.response != 'undefined') {
+                    if (typeof error.response.data != 'undefined') {
+                        if (typeof error.response.data.error_code != 'undefined') {
+                            reject(error.response.data)
+                        } else {
+                            reject(Message.ErrUnExHappen)
+                        }
+                    } else {
+                        reject(Message.ErrUnExHappen)
+                    }
+                } else {
+                    reject(Message.ErrNotSendRequest)
+                }
+                commit('_set_loading', false, { root: true })
+            }
+        })
+    },
     deleteStudent({ commit }, studentAcademicID) {
         return new Promise(async (resolve, reject) => {
             try {
