@@ -5,7 +5,7 @@
     </div>
     <div class="border h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
       <p class="text-xl mb-2 font-medium text-gray-600">Daftar akademik</p>
-      <button v-if="generated" class="py-2 rounded-lg hover:shadow-xl border border-blue-500 px-4 text-white bg-blue-400 mb-2">
+      <button @click="generate" :disabled="isLoading" v-if="generated" class="py-2 rounded-lg hover:shadow-xl border border-blue-500 px-4 text-white bg-blue-400 mb-2">
         <div class="flex flex-col">
           <span class="text-sm text-left font-bold text-white">Generate</span>
         </div>
@@ -43,10 +43,17 @@ export default {
     ...mapState('academic', ['academics']),
   },
   methods: {
-    ...mapActions('academic',['fetchAcademics']),
+    ...mapActions('academic',['fetchAcademics', 'generateAcademic']),
+    showError(err) {
+      const error = new Message(err)
+      const message = error.getMessage()
+      const code = error.getCode()
+      const notification = new Notify(code, message)
+      notification.sweetAlertNotif(this)
+    },
     checkYearNow() {
       const academic = this.academics[this.academics.length-1]
-      const academic_current = Semester()
+      const academic_current = new Semester().getFormat()
       if(academic) {
         if(`${academic.name}-${academic.semester}` != academic_current) {
           this.generated = true
@@ -54,6 +61,16 @@ export default {
           this.generated = false
         }
       }
+    },
+    generate() {
+      (async() => {
+        try {
+          await this.generateAcademic()
+          await this.fetchAcademics()
+        } catch (err) {
+          this.showError(err)
+        }
+      })()
     }
   },
   created() {
@@ -62,7 +79,7 @@ export default {
         await this.fetchAcademics()
         this.checkYearNow()
       } catch (err) {
-        Notify.createNotif({msg: err.message, notif: this.notif})
+        this.showError(err)
       }
     })()
   }

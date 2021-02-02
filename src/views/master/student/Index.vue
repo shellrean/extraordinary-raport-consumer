@@ -1,39 +1,75 @@
 <template>
-  <div class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 h-full w-full">
-    <div class="border pb-2 lg:pb-0 w-full lg:max-w-xs px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
-     <MasterMenus />
-    </div>
-    <div class="border h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
-      <p class="text-xl mb-2 font-medium text-gray-600">Daftar siswa</p>
-      <div class="bg-white py-2 px-2 rounded-t-lg mb-2 border border-gray-300 shadow flex items-center flex-col space-y-4 lg:flex-row lg:space-y-0">
-        <div class="w-full lg:max-w-xs">
-          <router-link :to="{name: 'master.student.create' }" class="mr-1 rounded-md py-1 px-3 bg-blue-400 border-2 border-blue-500 hover:shadow-xl disabled:opacity-50 text-white font-medium">Tambah</router-link>
-          <router-link to="/" class="py-1 px-3 rounded-md bg-green-400 border-2 border-green-500 hover:shadow-xl disabled:opacity-50 text-white font-medium">Import</router-link> 
+  <div class="flex container md:mx-auto flex-col space-y-4 lg:flex-row lg:space-y-0 h-full w-full">
+    <div class="h-full w-full mx-auto lg:flex-1 px-3 min-h-0 min-w-0">
+      <div class="bg-white pt-6 pb-2 rounded-t-lg border-t border-l border-r border-gray-300 shadow-sm flex flex-col">
+        <div class="flex justify-start space-x-2 mb-2 px-4">
+          <div class="w-4 h-4 bg-red-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
+          <div class="w-4 h-4 bg-yellow-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
+          <div class="w-4 h-4 bg-green-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
         </div>
-        <div class="w-full lg:flex-1">
-          <input type="text" class="rounded-md py-1 px-2 bg-gray-200 focus:bg-gray-100 border-2 border-gray-300 w-full" name="" placeholder="Cari">
+        <div class="flex justify-between items-center px-4 mb-4">
+          <p class="text-2xl font-bold text-gray-500">Daftar siswa</p>
+          <div class="flex space-x-1">
+            <router-link :to="{name: 'master.student.create' }" class="py-1 px-4 rounded-md border border-gray-300 text-gray-600 disabled:opacity-50 text-white font-medium">Import siswa</router-link>
+            <router-link :to="{name: 'master.student.create' }" class="py-1 px-4 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah siswa</router-link>
+          </div>
+        </div>
+        <div class="flex">
+          <p class="pb-2 border-b-2 border-gray-200 px-4 font-semibold text-gray-400">Siswa aktif</p>
+          <p class="pb-2 border-b-2 border-blue-400 px-4 font-semibold text-blue-400">Semua siswa</p>
+          <p class="pb-2 border-b-2 border-gray-200 px-4 flex-1"></p>
+        </div>
+        <div class="flex w-full py-1 px-4 py-2">
+          <div class="w-md">
+            <input type="text" class="rounded-md py-1 px-2 focus:border-blue-200 border border-gray-300 w-full" name="" placeholder="Cari siswa">
+          </div>
+        </div>
+        <div class="flex px-2 flex-col border-t border-b py-2 border-gray-300 sm:flex-row py-1 justify-between sm:items-center border-gray-300">
+          <div class="sm:px-1 flex items-center">
+            <div class="pl-2 pr-2 sm:pr-0">
+              <input type="checkbox" />
+            </div>
+            <div class="flex flex-col">
+              <p class="sm:px-3 font-medium text-gray-600 text-sm">INFO SISWA</p>
+            </div>
+          </div>
+          <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+            <p class="sm:px-3 font-medium text-gray-600 text-sm">AKSI</p>
+          </div>
         </div>
       </div>
-      <div class="max-h-96 overflow-y-scroll mb-2">
-        <div class="bg-white p-1 sm:p-0 mb-2 border border-gray-300 shadow rounded-lg" v-for="(student,index) in students" :key="index">
-          <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
-            <div class="sm:px-1 flex items-center">
-              <div class="flex flex-col">
-                <p class="sm:px-3 text-xs text-gray-700">{{ student.srn }} | {{ student.nsrn }}</p>
-                <p class="sm:px-3 font-semibold text-gray-700">{{ student.name }}</p>
+      <div class="max-h-96 overflow-y-scroll">
+        <div class="bg-white py-2 px-2 border-l border-r border-gray-300">
+          <div class="hover:bg-gray-50 p-1 sm:p-0 mb-1 border-b border-gray-200" v-for="(student,index) in students" :key="index">
+            <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
+              <div class="sm:px-1 flex items-center">
+                <div class="pl-2 pr-2 sm:pr-0">
+                  <input type="checkbox" :value="student.id" />
+                </div>
+                <div class="flex flex-col">
+                  <p class="sm:px-3 text-xs text-gray-700">{{ student.srn }} | {{ student.nsrn }}</p>
+                  <p class="sm:px-3 text-gray-700">{{ student.name }}</p>
+                </div>
               </div>
-            </div>
-            <div class="flex pr-2">
-              <button class="px-2 mr-1 rounded-sm bg-blue-400 text-white hover:shadow-md border-blue-500 border font-medium" @click="showDataStudent(student.id)">Detail</button>
-              <router-link :to="{name: 'master.student.edit', params: {id: student.id}}" class="px-2 mr-1 rounded-sm bg-yellow-400 text-white hover:shadow-md border-yellow-500 border font-medium" >Edit</router-link>
-              <button class="px-2 rounded-sm bg-red-400 text-white font-medium border-red-500 border hover:shadow-md" @click="deleteSingleStudent(student.id, index)">Hapus</button>
+              <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+                <button class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md" @click="showDataStudent(student.id)">Detail</button>
+                <router-link :to="{name: 'master.student.edit', params: {id: student.id}}" class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md" >Edit</router-link>
+                <button class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md" @click="deleteSingleStudent(student.id, index)">Hapus</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="bg-white py-2 px-2 rounded-b-lg mb-2 border border-gray-300 shadow">
-        <button :disabled="isLoading || cursor.prev.length == 1" @click="prevPage" class="rounded-l-md py-1 px-3 bg-gray-500 hover:shadow-xl disabled:opacity-50 text-white font-medium border-2 border-gray-600" :class="{'opacity-50 cursor-default': isLoading}">Kembali</button>
-        <button class="rounded-r-md py-1 px-3 bg-gray-500 hover:shadow-xl disabled:opacity-50 text-white font-medium border-t-2 border-r-2 border-b-2 border-gray-600" :disabled="isLoading || typeof cursor.next == 'undefined'" @click="nextPage" :class="{'opacity-50 cursor-default': isLoading}">Lanjut</button>  
+      <div class="bg-white py-2 flex justify-between px-2 rounded-b-lg mb-2 border-l border-b border-r border-gray-300 shadow-sm">
+        <div>
+          <button class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-l border-t border-b border-gray-300">Clear</button>
+          <button class="py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200  disabled:opacity-50 text-white border-t border-b border-gray-300">Pilih semua</button>
+          <button class="rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-r border-t border-b border-gray-300">Hapus</button>
+        </div>
+        <div>
+          <button :disabled="isLoading || cursor.prev.length == 1" @click="prevPage" class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border-l border-b border-gray-300" :class="{'opacity-50 cursor-default': isLoading}">Kembali</button>
+          <button class="rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border- border-b border-gray-300" :disabled="isLoading || typeof cursor.next == 'undefined'" @click="nextPage" :class="{'opacity-50 cursor-default': isLoading}">Lanjut</button>  
+        </div>
       </div>
     </div>
     <div class="fixed z-10 inset-0 overflow-y-auto" v-if="show_modal">

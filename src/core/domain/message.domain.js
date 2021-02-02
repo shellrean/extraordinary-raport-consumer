@@ -41,6 +41,7 @@ class Message {
             {code: 1406, message: "Setting tidak ditemukan"},
             {code: 1407, message: "Siswa kelas tidak ditemukan"},
             {code: 1408, message: "Siswa tidak ditemukan"},
+            {code: 1408, message: "Tahun akademik tidak ditemukan, pastikan anda memasukkan tahun akademik hanya yang tersedia"},
             {code: 1501, message: "Tahun akademik telah dibuat untuk tahun ini"},
             {code: 1502, message: "Duplikat pada kelas akademik, Kelas ini telah dibuat sebelumnya"},
             {code: 1503, message: "Duplikat penempatan siswa, Siswa ini telah ditempatkan di kelas"},
@@ -50,6 +51,9 @@ class Message {
     }
 
     getMessage() {
+        if(typeof this.error == 'undefined') {
+            return this.error
+        }
         if (typeof this.error.error_code == 'undefined') {
             return "Terjadi kesalahan yang tidak dapat dijelaskan"
         }

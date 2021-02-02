@@ -163,7 +163,7 @@ export default {
       if(this.classrooms == null) {
         return []
       }
-      return this.classrooms.filter((item) => item.classroomName.toLowerCase().includes(this.searchClassroom.toLowerCase()))
+      return this.classrooms.filter((item) => item.classroomName.toLowerCase().includes(this.searchClassroom.toLowerCase()) && item.id != this.$route.params.id)
     }
   },
   methods: {

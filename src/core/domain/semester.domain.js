@@ -1,9 +1,11 @@
 class Semester {
     constructor() {
-        this.date = new Data()
+        this.date = new Date()
         this.setSemester()
         this.setYearAcademic()
+    }
 
+    getFormat() {
         return `${this.year}-${this.semester}`
     }
 
@@ -15,7 +17,7 @@ class Semester {
         } else {
             semester = 1
         }
-        this.semester
+        this.semester = semester
     }
 
     getSemester() {
@@ -23,7 +25,7 @@ class Semester {
     }
 
     setYearAcademic() {
-        const year = this.date.getMonth()
+        const year = this.date.getFullYear()
         let academicYear
         if(this.semester == 1) {
             academicYear = `${year}/${year+1}`

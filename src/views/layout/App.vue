@@ -1,6 +1,6 @@
 <template>
-  <div class="h-screen overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
-    <section class="h-screen w-screen bg-gray-200 flex flex-col-reverse sm:flex-row min-h-0 min-w-0 overflow-hidden">
+  <div class="h-screen overflow-hidden flex items-center justify-center font-poppins">
+    <section class="h-screen w-screen bg-gray-50 flex flex-col-reverse sm:flex-row min-h-0 min-w-0 overflow-hidden">
       <aside class="sm:h-full sm:w-16 w-full h-12 bg-gray-800 text-gray-200">
         <ul class="text-center flex flex-row sm:flex-col w-full">
           <li class="h-14 border-b border-gray-900 hidden sm:block">
@@ -39,9 +39,9 @@
       <main class="sm:h-full flex-1 flex flex-col min-h-0 min-w-0 overflow-auto">
         <nav class="border-b-2 border-gray-300 bg-white px-2 sm:px-6 py-2 flex items-center min-w-0 h-14">
           <h1 class="font-semibold text-lg"></h1>
-          <span class="flex-1">
-            <span class="py-1 sm:px-3 text-xs sm:text-sm font-semibold text-gray-500" v-if="academic.id == academics[academics.length - 1]">Akademik {{ academic.name }} semester {{ academic.semester }}</span>
-            <span class="py-1 px-3 bg-yellow-300 rounded-full text-xs text-gray-500" v-else>Akademik Arsip {{ academic.name }} semester {{ academic.semester }}</span>
+          <span class="flex-1" v-if="typeof academic_active != 'undefined'">
+            <span class="py-1 sm:px-3 text-xs sm:text-sm font-semibold text-gray-500" v-if="academic_active.id == (academics[academics.length - 1] ? academics[academics.length - 1].id : '-')">Akademik {{ academic_active.name }} semester {{ academic_active.semester }}</span>
+            <span class="py-1 px-3 bg-yellow-300 rounded-full text-xs text-gray-500" v-else>Akademik Arsip {{ academic_active.name }} semester {{ academic_active.semester }}</span>
           </span>
           <span class="mr-2">
           </span>
@@ -92,7 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isLoading']),
+    ...mapState(['isLoading', 'academic_active']),
     ...mapState('sett', ['settings']),
     ...mapState('academic', ['academics']),
   },
@@ -130,8 +130,12 @@ export default {
       if (set_academic.length > 0) {
         const academic = this.academics.filter((item) => item.id == set_academic[0].value)
         if (academic.length > 0) {
-          this.academic = academic[0]
-          this.setAcademicYear(this.academic)
+          if(academic[0].id != this.academics[this.academics.length - 1].id) {
+            academic[0].archive = true
+          } else {
+            academic[0].archive = false
+          }
+          this.setAcademicYear(academic[0])
         }
       }
     }

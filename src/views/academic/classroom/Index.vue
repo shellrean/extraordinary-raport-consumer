@@ -28,7 +28,7 @@
         </router-link>
       </div>
       <div class="bg-white py-2 px-2 border border-gray-300 shadow rounded-b-lg mb-2">
-        <router-link :to="{name: 'academic.classroom.create'}" class="py-1 px-4 border-blue-300 border bg-blue-100 text-blue-600 rounded-md hover:shadow-md">Buat kelas akademik</router-link>
+        <router-link :to="{name: 'academic.classroom.create'}" class="py-1 px-4 border-blue-300 border bg-blue-100 text-blue-600 rounded-md hover:shadow-md" v-if="!academic_active.archive">Buat kelas akademik</router-link>
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isLoading']),
+    ...mapState(['isLoading','academic_active']),
     ...mapState('academic_classroom', ['classrooms']),
     filteredClassroom() {
       if(this.classrooms == null) {
@@ -79,6 +79,7 @@ export default {
     }
   },
   created() {
+    console.log(this.academic_active)
     this.fetchData()
   }
 };

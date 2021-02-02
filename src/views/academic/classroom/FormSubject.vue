@@ -242,6 +242,7 @@ export default {
   methods: {
     ...mapActions('subject',['fetchSubjects']),
     ...mapActions('user',['fetchUsers', 'showUser']),
+    ...mapActions('academic_classroom', ['fetchClassroomsByAcademic']),
     ...mapActions('academic_subject', ['fetchSubjectsByClassroomAcademic', 'storeSubject', 'showSubject', 'deleteSubject', 'updateSubject', 'copySubjects']),
     showError(err) {
       const error = new Message(err)
@@ -428,6 +429,17 @@ export default {
         this.showError(err)
       }
     }, 500),
+    academic(value) {
+      if(typeof value.id != 'undefined'){
+        (async() => {
+          try {
+            await this.fetchClassroomsByAcademic(value.id)
+          } catch (err) {
+            this.showError(err)
+          }
+        })()
+      }
+    }
   }
 }
 </script>

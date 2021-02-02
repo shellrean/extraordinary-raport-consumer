@@ -33,7 +33,7 @@
               <span class="text-sm">Jumlah mata pelajaran {{ subjects == null ? 0 : subjects.lengt }}</span>
             </div>
           </div>
-          <div class="flex space-x-2">
+          <div class="flex space-x-2" v-if="!academic_active.archive">
             <router-link :to="{name: 'academic.classroom.edit', params: {id: $route.params.id}}" class="text-sm py-1 px-4 border-green-300 border bg-green-100 text-green-600 rounded-full hover:shadow-md">
               Edit kelas
             </router-link>  
@@ -66,7 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isLoading']),
+    ...mapState(['academic_active','isLoading']),
     ...mapState('academic_classroom', ['classroom']),
     ...mapState('academic_student', ['students']),
     ...mapState('academic_subject', ['subjects']),
