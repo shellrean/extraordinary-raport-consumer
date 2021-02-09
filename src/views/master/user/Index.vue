@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 h-full w-full">
-    <div class="border pb-2 lg:pb-0 w-full lg:max-w-xs px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
+    <div class="border-r pb-2 lg:pb-0 w-full lg:max-w-xs px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
       <MasterMenus />
     </div>
-    <div class="border h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
+    <div class="h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
       <p class="text-xl mb-2 font-medium text-gray-600">Daftar pengguna</p>
       <div class="bg-white py-4 sm:py-2 px-2 rounded-t-lg mb-2 border border-gray-300 shadow flex items-center flex-col space-y-4 lg:flex-row lg:space-y-0">
         <div class="w-full lg:max-w-xs">
@@ -16,7 +16,7 @@
       </div>
       <div class="max-h-96 overflow-y-scroll mb-2">
         <span class="font-medium text-gray-600" v-if="typeof users == 'undefined' || users === null || users.length === 0">Tidak ada data pengguna...</span>
-        <div class="bg-white p-1 sm:p-0 mb-2 border border-gray-300 shadow rounded-lg" v-for="(user, index) in users">
+        <div class="bg-white p-1 sm:p-0 mb-2 border border-gray-300 shadow rounded-lg" v-for="(user, index) in users" :key="user.id">
           <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
             <div class="sm:px-1 flex items-center">
               <div class="pl-2 pr-2 sm:pr-0">

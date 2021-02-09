@@ -27,14 +27,8 @@ const actions = {
                             if (error.response.data.error_code == 1106) {
                                 commit('_set_errors', error.response.data.errors, { root: true })
                             }
-                            else if (error.response.data.error_code == 1206) {
-                                reject({message: 'Akun tidak ditemukan'})
-                            }
-                            else if (error.response.data.error_code == 1301) {
-                                reject({message: 'Password salah'})
-                            }
                             else {
-                                reject({message: error.response.data.message})
+                                reject(error.response.data)
                             }
                         } else {
                             reject(Message.ErrUnExHappen)

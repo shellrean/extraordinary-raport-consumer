@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 h-full w-full">
-    <div class="border pb-2 lg:pb-0 w-full lg:max-w-xs px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
+    <div class="border-r pb-2 lg:pb-0 w-full lg:max-w-xs px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
      <MasterMenus />
     </div>
-    <div class="border h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
+    <div class=" h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
       <p class="text-xl mb-2 font-medium text-gray-600">Daftar jurusan</p>
       <div class="bg-white py-2 px-2 rounded-lg mb-2 border border-gray-300 shadow flex items-center flex-col space-y-4 lg:flex-row lg:space-y-0">
         <div class="w-full lg:max-w-xs">
@@ -14,7 +14,7 @@
           <input type="text" class="rounded-md py-1 px-2 bg-gray-200 focus:bg-gray-100 border-2 border-gray-300 w-full" name="" placeholder="Cari">
         </div>
       </div>
-      <div class="bg-white mb-2 border border-gray-300 shadow rounded-lg" v-for="major in majors">
+      <div class="bg-white mb-2 border border-gray-300 shadow rounded-lg" v-for="major in majors" :key="major.id">
         <div class="flex flex-col sm:flex-row py-2 justify-between items-center">
           <div class="px-3 font-semibold text-gray-700">{{ major.name }}</div>
           <div class="flex pr-2">
