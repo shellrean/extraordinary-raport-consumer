@@ -26,7 +26,7 @@ class Message {
             {code: 1104, message: "Authentikasi gagal"},
             {code: 1105, message: "Data yang diminta tidak ditemukan"},
             {code: 1106, message: "Validasi data gagal, silakan cek form yang anda kirimkan"},
-            {code: 1201, message: "Sesi anda sepertinya expired, coba login kembali"},
+            {code: 1201, message: "Sesi anda sepertinya expired, kami mencoba menghubungkan anda kembali"},
             {code: 1202, message: "Anda memasukkan token yang tidak dikenali"},
             {code: 1203, message: "Anda memasukkan token yang tidak dikenali"},
             {code: 1204, message: "Anda memasukkan token yang tidak dikenali"},

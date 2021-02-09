@@ -42,6 +42,22 @@ const actions = {
                 commit('_set_loading', false, { root: true })
             }
         })
+    },
+    refreshToken({ commit }, payload) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let network = await $axios.post(`refresh-token`, payload)
+                if (network.data.success) {
+                    localStorage.setItem('access_token', network.data.data.access_token)
+                    localStorage.setItem('refresh_token', network.data.data.refresh_token)
+                    commit('_set_access_token', network.data.data.access_token, { root: true })
+                    commit('_set_refresh_token', network.data.data.refresh_token, { root: true })
+                }
+                resolve(network.data)
+            } catch (err) {
+                reject(err)
+            }
+        })
     }
 }
 

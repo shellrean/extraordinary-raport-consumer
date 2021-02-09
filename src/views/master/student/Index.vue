@@ -10,8 +10,8 @@
         <div class="flex justify-between items-center px-4 mb-4">
           <p class="text-2xl font-bold text-gray-500">Daftar siswa</p>
           <div class="flex space-x-1">
-            <router-link :to="{name: 'master.student.create' }" class="py-1 px-4 rounded-md border border-gray-300 text-gray-600 disabled:opacity-50 text-white font-medium">Import siswa</router-link>
-            <router-link :to="{name: 'master.student.create' }" class="py-1 px-4 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah siswa</router-link>
+            <router-link :to="{name: 'master.student.create' }" class="py-2 text-sm px-4 rounded-md border border-gray-300 text-gray-600 disabled:opacity-50 text-white font-medium">Import siswa</router-link>
+            <router-link :to="{name: 'master.student.create' }" class="py-2 text-sm px-4 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah siswa</router-link>
           </div>
         </div>
         <div class="flex">
@@ -21,13 +21,13 @@
         </div>
         <div class="flex w-full py-1 px-4 py-2">
           <div class="w-md">
-            <input type="text" class="rounded-md py-1 px-2 focus:border-blue-200 border border-gray-300 w-full" name="" placeholder="Cari siswa">
+            <input v-model="search" type="text" class="rounded-md py-1 px-4 focus:border-blue-200 border border-gray-300 w-full" name="" placeholder="Cari siswa">
           </div>
         </div>
         <div class="flex px-2 flex-col border-t border-b py-2 border-gray-300 sm:flex-row py-1 justify-between sm:items-center border-gray-300">
           <div class="sm:px-1 flex items-center">
-            <div class="pl-2 pr-2 sm:pr-0">
-              <input type="checkbox" />
+            <div class="pl-2 pr-2 sm:pr-0" v-if="selected.length != 'undefined' && students != null">
+              <input :checked="selected.length == students.length" @input="onCheckAllClick" type="checkbox" />
             </div>
             <div class="flex flex-col">
               <p class="sm:px-3 font-medium text-gray-600 text-sm">INFO SISWA</p>
@@ -38,13 +38,13 @@
           </div>
         </div>
       </div>
-      <div class="max-h-96 overflow-y-scroll">
+      <perfect-scrollbar class="max-h-96 overflow-y-scroll">
         <div class="bg-white py-2 px-2 border-l border-r border-gray-300">
           <div class="hover:bg-gray-50 p-1 sm:p-0 mb-1 border-b border-gray-200" v-for="(student,index) in students" :key="index">
             <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
               <div class="sm:px-1 flex items-center">
                 <div class="pl-2 pr-2 sm:pr-0">
-                  <input type="checkbox" :value="student.id" />
+                  <input type="checkbox" :value="student.id" :checked="selected.includes(student.id)" @input="onCheckClick"/>
                 </div>
                 <div class="flex flex-col">
                   <p class="sm:px-3 text-xs text-gray-700">{{ student.srn }} | {{ student.nsrn }}</p>
@@ -53,22 +53,22 @@
               </div>
               <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
                 <button class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md" @click="showDataStudent(student.id)">Detail</button>
-                <router-link :to="{name: 'master.student.edit', params: {id: student.id}}" class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md" >Edit</router-link>
-                <button class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md" @click="deleteSingleStudent(student.id, index)">Hapus</button>
+                <router-link :to="{name: 'master.student.edit', params: {id: student.id}}" class="py-1 px-4 text-sm rounded-md bg-yellow-50 text-yellow-600 border-yellow-300 border hover:shadow-md" >Edit</router-link>
+                <button class="py-1 px-4 text-sm rounded-md bg-red-50 text-red-600 border-red-300 border hover:shadow-md" @click="deleteSingleStudent(student.id, index)">Hapus</button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </perfect-scrollbar>
       <div class="bg-white py-2 flex justify-between px-2 rounded-b-lg mb-2 border-l border-b border-r border-gray-300 shadow-sm">
         <div>
-          <button class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-l border-t border-b border-gray-300">Clear</button>
-          <button class="py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200  disabled:opacity-50 text-white border-t border-b border-gray-300">Pilih semua</button>
-          <button class="rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-r border-t border-b border-gray-300">Hapus</button>
+          <button class="text-sm rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-l border-t border-b border-gray-300" @click="clearSelected" :disabled="selected.length === 0">Clear</button>
+          <button class="text-sm py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200  disabled:opacity-50 text-white border-t border-b border-gray-300" @click="selectAllRows" :disabled="selected.length == (students != null ? students.length : 0)">Pilih semua</button>
+          <button class="text-sm rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-r border-t border-b border-gray-300" @click="deleteMultipleStudents" :disabled="selected.length === 0">Hapus</button>
         </div>
         <div>
-          <button :disabled="isLoading || cursor.prev.length == 1" @click="prevPage" class="rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border-l border-b border-gray-300" :class="{'opacity-50 cursor-default': isLoading}">Kembali</button>
-          <button class="rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border- border-b border-gray-300" :disabled="isLoading || typeof cursor.next == 'undefined'" @click="nextPage" :class="{'opacity-50 cursor-default': isLoading}">Lanjut</button>  
+          <button :disabled="isLoading || cursor.prev.length == 1" @click="prevPage" class="text-sm rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border-l border-b border-gray-300" :class="{'opacity-50 cursor-default': isLoading}">Kembali</button>
+          <button class="text-sm rounded-r-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-t border-r border-b border-gray-300" :disabled="isLoading || typeof cursor.next == 'undefined'" @click="nextPage" :class="{'opacity-50 cursor-default': isLoading}">Lanjut</button>  
         </div>
       </div>
     </div>
@@ -99,30 +99,31 @@
         </div>
       </div>
     </div>
-    <div class="absolute left-4 bottom-4 xl:left-10 xl:bottom-10">
-      <div class="flex flex-col space-y-2">
-        <Notif :msg="val.msg" v-for="val in notif" :key="val.id"/>
-      </div>
-    </div>
   </div>
 </template>
 <script>
-import Notif from '@/components/nano/Notif'
+import Notify from '@/core/services/notif.service'
+import Message from '@/core/domain/message.domain'
 import MasterMenus from '@/components/MasterMenus'
 import StudentDetail from './StudentDetail'
+import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
+import _ from 'lodash'
+
 export default {
   name: 'Student',
   components: {
     StudentDetail,
     MasterMenus,
-    Notif,
+    PerfectScrollbar
   },
   data() {
     return {
       show_modal: false,
       notif: [],
-      detail: {}
+      detail: {},
+      selected: [],
+      search: '',
     }
   },
   computed: {
@@ -139,6 +140,13 @@ export default {
   },
   methods: {
     ...mapActions('student',['fetchStudents', 'deleteStudent']),
+    showError(err) {
+      const error = new Message(err)
+      const message = error.getMessage()
+      const code = error.getCode()
+      const notification = new Notify(code, message)
+      notification.sweetAlertNotif(this)
+    },
     showDataStudent(id) {
       let idx = this.students.map((item) => item.id).indexOf(id)
       if (idx !== -1) {
@@ -146,35 +154,46 @@ export default {
         this.show_modal = true
       }
     },
+    selectAllRows() {
+      this.selected = this.students.map((item) => item.id)
+    },
+    clearSelected() {
+      this.selected = []
+    },
+    onCheckClick(e) {
+      if(e.target.checked) {
+        this.selected.push(e.target.value)
+      } else {
+        let idx = this.selected.indexOf(e.target.value)
+        if (idx !== -1) {
+          this.selected.splice(idx, 1)
+        }
+      }
+    },
+    onCheckAllClick(e) {
+      if(e.target.checked) {
+        this.selectAllRows()
+      } else {
+        this.clearSelected()
+      }
+    },
     prevPage() {
       (async () => {
         try {
-          await this.fetchStudents(true)
+          await this.fetchStudents({ search: this.search, reverse: true })
+          this.clearSelected()
         } catch (err) {
-         let id = new Date().getTime()
-          this.notif.push({id: id, msg: err.message})
-          let idx = this.notif.map((item) => item.id).indexOf(id)
-          if(idx !== -1) {
-            setTimeout(() => { 
-              this.notif.splice(idx, 1)
-            }, 3000);
-          }
+          this.showError(err)
         }
       })()
     },
     nextPage() {
       (async () => {
         try {
-          await this.fetchStudents()
+          await this.fetchStudents({ search: this.search })
+          this.clearSelected()
         } catch (err) {
-          let id = new Date().getTime()
-          this.notif.push({id: id, msg: err.message})
-          let idx = this.notif.map((item) => item.id).indexOf(id)
-          if(idx !== -1) {
-            setTimeout(() => { 
-              this.notif.splice(idx, 1)
-            }, 3000);
-          }
+          this.showError(err)
         }
       })()
     },
@@ -193,16 +212,22 @@ export default {
             await this.deleteStudent(id)
             this.students.splice(index, 1)
           } catch (err) {
-            let id = new Date().getTime()
-            this.notif.push({id: id, msg: err.message})
-            let idx = this.notif.map((item) => item.id).indexOf(id)
-            if(idx !== -1) {
-              setTimeout(() => { 
-                this.notif.splice(idx, 1)
-              }, 3000);
-            }
+            this.showError(err)
           }
         }
+      })
+    },
+    deleteMultipleStudents() {
+      this.$swal({
+        title: 'Peringatan',
+        text: `${this.selected.length } siswa akan dihapus berserta data yang terkait`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#c7c7c7',
+        confirmButtonText: 'Iya, Lanjutkan!'
+      }).then(async (result) => {
+
       })
     }
   },
@@ -212,16 +237,20 @@ export default {
         this.$store.commit('student/_reset_student_cursor')
         await this.fetchStudents()
       } catch (err) {
-        let id = new Date().getTime()
-        this.notif.push({id: id, msg: err.message})
-        let idx = this.notif.map((item) => item.id).indexOf(id)
-        if(idx !== -1) {
-          setTimeout(() => { 
-            this.notif.splice(idx, 1)
-          }, 3000);
-        }
+        this.showError(err)
       }
     })()
   },
+  watch: {
+    search: _.debounce(async function(value) {
+      try {
+        this.$store.commit('student/_reset_student_cursor')
+        await this.fetchStudents({ search: this.search })
+        this.clearSelected()
+      } catch (err) {
+        this.showError(err)
+      }
+    })
+  }
 };
 </script>

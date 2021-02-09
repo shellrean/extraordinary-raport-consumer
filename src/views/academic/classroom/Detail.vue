@@ -14,12 +14,12 @@
         </div>
       </div>
       <div class="grid md:grid-cols-2">
-        <div class="max-h-96 overflow-y-scroll bg-white py-4 px-4 border border-gray-300 shadow">
+        <perfect-scrollbar class="max-h-96 overflow-y-scroll bg-white py-4 px-4 border border-gray-300 shadow">
           <ClassroomSubject />
-        </div>
-        <div class="max-h-96 overflow-y-scroll bg-white py-4 px-4 border border-gray-300 shadow">
+        </perfect-scrollbar>
+        <perfect-scrollbar class="max-h-96 overflow-y-scroll bg-white py-4 px-4 border border-gray-300 shadow">
           <ClassroomStudent />
-        </div>
+        </perfect-scrollbar>
       </div>
       <div class="bg-white py-2 px-2 border border-gray-300 shadow rounded-b-lg mb-2">
         <div class="flex flex-col md:flex-row md:space-x-2 justify-between flex-1 items-center">
@@ -51,12 +51,14 @@ import Notify from '@/core/services/notif.service'
 import Message from '@/core/domain/message.domain'
 import ClassroomStudent from './ClassroomStudent'
 import ClassroomSubject from './ClassroomSubject'
+import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'AcademicClassroomDetail',
   components: {
     ClassroomStudent,
-    ClassroomSubject
+    ClassroomSubject,
+    PerfectScrollbar
   },
   data() {
     return {

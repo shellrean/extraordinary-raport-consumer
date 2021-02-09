@@ -16,7 +16,7 @@
           </div>
         </div>
       </div>
-      <div class="max-h-96 overflow-y-scroll bg-white border border-gray-300 shadow">
+      <perfect-scrollbar class="max-h-96 overflow-y-scroll bg-white border border-gray-300 shadow">
         <router-link :to="{name: 'academic.classroom.detail', params: {id: classroom.id}}" class="block bg-white mb-2 transition duration-300 hover:bg-blue-50 cursor-pointer" v-for="(classroom, index) in filteredClassroom" :key="index">
           <div class="flex flex-col sm:flex-row py-2 sm:justify-between sm:items-center">
             <div>
@@ -26,7 +26,7 @@
             <span class="px-3 text-gray-500 text-sm">{{ classroom.teacherName }}</span>
           </div>
         </router-link>
-      </div>
+      </perfect-scrollbar>
       <div class="bg-white py-2 px-2 border border-gray-300 shadow rounded-b-lg mb-2">
         <router-link :to="{name: 'academic.classroom.create'}" class="py-1 px-4 border-blue-300 border bg-blue-100 text-blue-600 rounded-md hover:shadow-md" v-if="!academic_active.archive">Buat kelas akademik</router-link>
       </div>
@@ -37,11 +37,13 @@
 import HomeIconLine from '@/components/icons/HomeIconLine'
 import Notify from '@/core/services/notif.service'
 import Message from '@/core/domain/message.domain'
+import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'AcademicClassroom',
   components: {
     HomeIconLine,
+    PerfectScrollbar
   },
   data() {
     return {
