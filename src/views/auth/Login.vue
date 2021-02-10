@@ -39,6 +39,7 @@
 <script>
 import Notify from '@/core/services/notif.service'
 import Message from '@/core/domain/message.domain'
+import { Role } from '@/core/domain/role.domain'
 import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
   name: 'Login',
@@ -54,15 +55,17 @@ export default {
       notif: {
         show: false,
         msg: ""
-      }
+      },
+      returnUrl: ''
     }
   },
   computed: {
     ...mapGetters(['isAuth']),
-    ...mapState(['errors','isLoading','loadPage'])
+    ...mapState(['errors','isLoading','loadPage']),
+    ...mapState('auth', ['authorized_user'])
   },
   created() {
-    
+    this.returnUrl = this.$route.query.returnUrl || '';
   },
   methods: {
     ...mapActions('auth', ['submit']),
@@ -77,7 +80,13 @@ export default {
       try {
         let provider = await this.submit(this.data)
         if (this.isAuth) {
-          this.$router.push({ name: 'dashboard' })
+          if(this.returnUrl != '') {
+            return this.$router.push(this.returnUrl)
+          }
+          if (this.authorized_user.role == Role.Admin) {
+            return this.$router.push({ name: 'master.index' })
+          }
+          return this.$router.push({ name: 'resulting.index' })
         }
       } catch (err) {
         this.showError(err)

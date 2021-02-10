@@ -1,8 +1,47 @@
 import $axios from '@/core/services/api.service.js'
 import Message from '@/core/domain/message.domain.js'
 
+const state = () => ({
+    authorized_user: JSON.parse(localStorage.getItem('authorized_user') != null ? localStorage.getItem('authorized_user') : '{}'),
+})
+
+const mutations = {
+    _assign_authorized_user(state, payload) {
+        state.authorized_user = payload
+    }
+}
+
 const actions = {
-    submit({ commit }, payload) {
+    getAuthorizeUser({ commit }) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                commit('_set_loading', true, { root: true })
+                const network = await $axios.get(`users/auth-current`)
+                if (network.data.success) {
+                    localStorage.setItem('authorized_user', JSON.stringify(network.data.data))
+                    commit('_assign_authorized_user', network.data.data)
+                }
+                commit('_set_loading', false, { root: true })
+                resolve(network.data)
+            } catch (error) {
+                if (typeof error.response != 'undefined') {
+                    if (typeof error.response.data != 'undefined') {
+                        if (typeof error.response.data.error_code != 'undefined') {
+                            reject(error.response.data)
+                        } else {
+                            reject(Message.ErrUnExHappen)
+                        }
+                    } else {
+                        reject(Message.ErrUnExHappen)
+                    }
+                } else {
+                    reject(Message.ErrNotSendRequest)
+                }
+                commit('_set_loading', false, { root: true })
+            }
+        })
+    },
+    submit({ commit, dispatch }, payload) {
         return new Promise(async (resolve, reject) => {
             try {
                 localStorage.setItem('access_token', null)
@@ -13,6 +52,7 @@ const actions = {
                 let network = await $axios.post(`auth`, payload)
 
                 if (network.data.success) {
+                    dispatch('getAuthorizeUser')
                     localStorage.setItem('access_token', network.data.data.access_token)
                     localStorage.setItem('refresh_token', network.data.data.refresh_token)
                     commit('_set_access_token', network.data.data.access_token, { root: true })
@@ -63,5 +103,7 @@ const actions = {
 
 export default {
     namespaced: true,
-    actions
+    state,
+    mutations,
+    actions,
 }

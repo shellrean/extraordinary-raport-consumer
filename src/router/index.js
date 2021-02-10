@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
 
+import { Role } from '@/core/domain/role.domain'
+
 const DumpLogin = () => import("@/views/dump/login/Login")
 
 const DumpMasterIndex = () => import("@/views/dump/master/Index")
@@ -40,6 +42,9 @@ const AcademicClassroomStudent = () => import("@/views/academic/classroom/FormSt
 
 const SettingIndex = () => import("@/views/sett/Index")
 
+const ResultingIndex = () => import("@/views/resulting/Index")
+const ResultingSubjectPlanIndex = () => import("@/views/resulting/subject_plan/Index")
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -56,168 +61,134 @@ const routes = [
       {
         path: 'm',
         name: 'master.index',
-        component: MasterIndex
+        component: MasterIndex,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/s',
         name: 'master.student',
-        component: MasterStudent
+        component: MasterStudent,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/s/c',
         name: 'master.student.create',
-        component: MasterStudentForm
+        component: MasterStudentForm,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/s/:id/u',
         name: 'master.student.edit',
-        component: MasterStudentForm
+        component: MasterStudentForm,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/m',
         name: 'master.major',
-        component: MasterMajor
+        component: MasterMajor,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/u',
         name: 'master.user',
-        component: MasterUser
+        component: MasterUser,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/u/c',
         name: 'master.user.create',
-        component: MasterUserForm
+        component: MasterUserForm,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/u/:id/u',
         name: 'master.user.edit',
-        component: MasterUserForm
+        component: MasterUserForm,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/u/i',
         name: 'master.user.import',
-        component: MasterUserImport
+        component: MasterUserImport,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/su',
         name: 'master.subject',
-        component: MasterSubject
+        component: MasterSubject,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/c',
         name: 'master.classroom',
-        component: MasterClassroom
+        component: MasterClassroom,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'm/a',
         name: 'master.academic',
-        component: MasterAcademic
+        component: MasterAcademic,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path:'a',
         name: 'academic.index',
-        component: AcademicIndex
+        component: AcademicIndex,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'a/c',
         name: 'academic.classroom',
-        component: AcademicClassroom
+        component: AcademicClassroom,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'a/c/c',
         name: 'academic.classroom.create',
-        component: AcademicClassroomForm
+        component: AcademicClassroomForm,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'a/c/:id/u',
         name: 'academic.classroom.edit',
-        component: AcademicClassroomForm
+        component: AcademicClassroomForm,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'a/c/:id/d',
         name: 'academic.classroom.detail',
-        component: AcademicClassroomDetail
+        component: AcademicClassroomDetail,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'a/c/:id/su',
         name: 'academic.classroom.subject',
-        component: AcademicClassroomSubject
+        component: AcademicClassroomSubject,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 'a/c/:id/s',
         name: 'academic.classroom.student',
-        component: AcademicClassroomStudent
+        component: AcademicClassroomStudent,
+        meta: { authorize: [Role.Admin] }
       },
       {
         path: 's',
         name: 'setting.index',
-        component: SettingIndex
-      }
-    ]
-  },
-  {
-    path: "/dump-login",
-    name: "dump.login",
-    component: DumpLogin
-  },
-  {
-    path: "/f",
-    component: AppLayout,
-    children: [
-      {
-        path: 'dump-master-index',
-        name: 'dump.master.index',
-        component: DumpMasterIndex
+        component: SettingIndex,
+        meta: { authorize: [Role.Admin] }
       },
       {
-        path: 'dump-master-major',
-        name: 'dump.master.major',
-        component: DumpMasterMajor
+        path: 'r',
+        name: 'resulting.index',
+        component: ResultingIndex,
+        meta: { authorize: [Role.Teacher] }
       },
       {
-        path: 'dump-master-major-create',
-        name: 'dump.master.major.create',
-        component: DumpMasterMajorCreate
-      },
-      {
-        path: 'dump-master-user',
-        name: 'dump.master.user',
-        component: DumpMasterUser
-      },
-      {
-        path: 'dump-master-user-create',
-        name: 'dump.master.user.create',
-        component: DumpMasterUserCreate
-      },
-      {
-        path: 'dump-master-student',
-        name: 'dump.master.student',
-        component: DumpMasterStudent
-      },
-      {
-        path: 'dump-master-student-create',
-        name: 'dump.master.student.create',
-        component: DumpMasterStudentCreate
-      },
-      {
-        path: 'dump-master-academic',
-        name: 'dump.master.academic',
-        component: DumpMasterAcademic
-      },
-      {
-        path: 'dump-master-subject',
-        name: 'dump.master.subject',
-        component: DumpMasterSubject
-      },
-      {
-        path: 'dump-master-subject-create',
-        name: 'dump.master.subject.create',
-        component: DumpMasterSubjectCreate
-      },
-      {
-        path: 'dump-master-classroom',
-        name: 'dump.master.classroom',
-        component: DumpMasterClassroom
+        path: 'r/sp',
+        name: 'resulting.subject.plan',
+        component: ResultingSubjectPlanIndex,
+        meta: { authorize: [Role.Teacher] }
       }
     ]
   }
@@ -230,18 +201,25 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   store.commit('_clear_errors')
   store.commit('_loading_page', true)
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    let auth = store.getters.isAuth
+
+  const { authorize } = to.meta;
+  const auth = store.getters.isAuth
+  const currentUser = store.state.auth.authorized_user
+
+  if (authorize) {
     if (!auth) {
-      next({ name: 'login' })
+      return next({ name: 'login', query: { returnUrl: to.path } })
     }
-    else {
-      next()
+
+    if (authorize.length && !authorize.includes(currentUser.role)) {
+      if (currentUser.role == Role.Admin) {
+        return next({ name: 'master.index' })
+      }
+      return next({ name: 'resulting.index' })
     }
   }
-  else {
-    next()
-  }
+
+  next()
 })
 
 router.afterEach(() => {

@@ -59,6 +59,10 @@ export default new Vuex.Store({
   actions: {
     setAcademicYear({ commit }, payload) {
       commit('_set_academic_year', payload)
+    },
+    logout({ commit }) {
+      commit('_set_access_token', null)
+      commit('_set_refresh_token', null)
     }
   },
   modules: {

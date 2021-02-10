@@ -4,7 +4,7 @@
       <aside class="sm:h-full sm:w-16 w-full h-12 bg-gray-800 text-gray-200">
         <ul class="text-center flex flex-row sm:flex-col w-full">
           <li class="h-14 border-b border-gray-900 hidden sm:block">
-            <a id="page-icon" href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
               <img class="object-contain h-full w-full" src="/img/logo.ico"
                 alt="" />
             </a>
@@ -14,25 +14,30 @@
               <HomeIconLine class="mx-auto"/>
             </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Dunia">
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Resulting">
+            <router-link :to="{name: 'resulting.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
+              <TaskIconLine class="mx-auto h-6" />
+            </router-link>
+          </li>
+          <li v-if="authorized_user.role == 1" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Dunia">
             <router-link :to="{name: 'master.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
               <DatabaseIconLine class="mx-auto"/>
             </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Akademik">
+          <li v-if="authorized_user.role == 1" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Akademik">
             <router-link :to="{name: 'academic.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
               <AttachmentIconLine class="mx-auto"/>
             </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
+          <li v-if="authorized_user.role == 1" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
             <router-link :to="{name: 'setting.index'}" class="h-full w-full hover:bg-gray-700 block p-3">
               <SettingIconLine class="mx-auto"/>
             </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
-            <a href="/" class="h-full w-full hover:bg-gray-700 block p-3">
+          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Logout">
+            <button @click="logoutFromDashboard" class="h-full w-full hover:bg-gray-700 block p-3">
               <LogoutIconLine class="mx-auto"/>
-            </a>
+            </button>
           </li>
         </ul>
       </aside>
@@ -71,6 +76,7 @@ import SettingIconLine from '@/components/icons/SettingIconLine'
 import DatabaseIconLine from '@/components/icons/DatabaseIconLine'
 import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
 import LogoutIconLine from '@/components/icons/LogoutIconLine'
+import TaskIconLine from '@/components/icons/TaskIconLine'
 import LoadBar from '@/components/nano/LoadBar'
 import Notify from '@/core/services/notif.service'
 import Message from '@/core/domain/message.domain'
@@ -83,6 +89,7 @@ export default {
     DatabaseIconLine,
     AttachmentIconLine,
     LogoutIconLine,
+    TaskIconLine,
     LoadBar,
   },
   data() {
@@ -95,9 +102,10 @@ export default {
     ...mapState(['isLoading', 'academic_active']),
     ...mapState('sett', ['settings']),
     ...mapState('academic', ['academics']),
+    ...mapState('auth', ['authorized_user']),
   },
   methods: {
-    ...mapActions(['setAcademicYear']),
+    ...mapActions(['setAcademicYear','logout']),
     ...mapActions('sett', ['fetchSettings']),
     ...mapActions('academic',['fetchAcademics']),
     showError(err) {
@@ -138,6 +146,16 @@ export default {
           this.setAcademicYear(academic[0])
         }
       }
+    },
+    logoutFromDashboard() {
+      (async() => {
+        try {
+          await this.logout()
+          this.$router.replace({name: 'login' })
+        } catch (err) {
+          this.showError(err)
+        }
+      })()
     }
   },
   created() {

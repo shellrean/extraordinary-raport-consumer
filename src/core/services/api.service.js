@@ -30,16 +30,20 @@ $axios.interceptors.response.use(
                 store.dispatch('auth/refreshToken', {
                     'refresh_token': store.state.refresh_token,
                 })
+                .then((re) => {
+                    const config = error.config;
+                    config.headers['Authorization'] = `Bearer ${store.state.access_token}`
 
-                const config = error.config;
-                config.headers['Authorization'] = `Bearer ${store.state.access_token}`
-
-                return new Promise((resolve, reject) => {
-                    axios.request(config).then(response => {
-                        resolve(response)
-                    }).catch((error) => {
-                        reject(error)
+                    return new Promise((resolve, reject) => {
+                        axios.request(config).then(response => {
+                            resolve(response)
+                        }).catch((error) => {
+                            reject(error)
+                        })
                     })
+                })
+                .catch((err) => {
+                    console.log('Error fatal: ', err)
                 })
             }
             else if([1203, 1202].includes(err_code)) {
