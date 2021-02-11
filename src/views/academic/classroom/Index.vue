@@ -81,7 +81,6 @@ export default {
     }
   },
   created() {
-    console.log(this.academic_active)
     this.fetchData()
   }
 };
