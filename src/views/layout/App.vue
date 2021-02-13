@@ -14,7 +14,7 @@
               <HomeIconLine class="mx-auto"/>
             </router-link>
           </li>
-          <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Resulting">
+          <li v-if="authorized_user.role == 2" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Resulting">
             <router-link :to="{name: 'resulting.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
               <TaskIconLine class="mx-auto h-6" />
             </router-link>

@@ -4,21 +4,6 @@ import store from '@/store'
 
 import { Role } from '@/core/domain/role.domain'
 
-const DumpLogin = () => import("@/views/dump/login/Login")
-
-const DumpMasterIndex = () => import("@/views/dump/master/Index")
-const DumpMasterMajor = () => import("@/views/dump/master/Major")
-const DumpMasterMajorCreate = () => import("@/views/dump/master/MajorCreate")
-const DumpMasterUser = () => import("@/views/dump/master/User")
-const DumpMasterUserCreate = () => import("@/views/dump/master/UserCreate")
-const DumpMasterStudent = () => import("@/views/dump/master/Student")
-const DumpMasterStudentCreate = () => import("@/views/dump/master/StudentCreate")
-const DumpMasterAcademic = () => import("@/views/dump/master/Academic")
-const DumpMasterSubject = () => import("@/views/dump/master/Subject")
-const DumpMasterSubjectCreate = () => import("@/views/dump/master/SubjectCreate")
-const DumpMasterClassroom = () => import("@/views/dump/master/Classroom")
-
-
 const Login = () => import("@/views/auth/Login")
 
 const AppLayout = () => import("@/views/layout/App")
@@ -48,6 +33,10 @@ const ResultingSubjectPlanIndex = () => import("@/views/resulting/subject_plan/I
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: "/",
+    redirect: "/login",
+  },
   {
     path: "/login",
     name: 'login',

@@ -67,7 +67,7 @@ const actions = {
                 if (typeof error.response != 'undefined') {
                     if (typeof error.response.data != 'undefined') {
                         if (typeof error.response.data.error_code != 'undefined') {
-                            reject(err.response.data)
+                            reject(error.response.data)
                         } else {
                             reject(Message.ErrUnExHappen)
                         }

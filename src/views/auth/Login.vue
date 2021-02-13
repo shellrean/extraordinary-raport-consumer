@@ -66,6 +66,15 @@ export default {
   },
   created() {
     this.returnUrl = this.$route.query.returnUrl || '';
+    if (this.isAuth) {
+      if(this.returnUrl != '') {
+        return this.$router.push(this.returnUrl)
+      }
+      if (this.authorized_user.role == Role.Admin) {
+        return this.$router.push({ name: 'master.index' })
+      }
+      return this.$router.push({ name: 'resulting.index' })
+    }
   },
   methods: {
     ...mapActions('auth', ['submit']),

@@ -3,12 +3,12 @@
     <div class="h-full w-full mx-auto lg:flex-1 px-3 min-h-0 min-w-0">
       <div class="bg-white pt-6 pb-2 rounded-t-lg border-t border-l border-r border-gray-300 shadow-sm flex flex-col">
         <div class="flex justify-start space-x-2 mb-2 px-4">
-          <div class="w-4 h-4 bg-red-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
+          <router-link :to="{name:'master.index'}" class="block w-4 h-4 bg-red-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></router-link>
           <div class="w-4 h-4 bg-yellow-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
           <div class="w-4 h-4 bg-green-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
         </div>
-        <div class="flex justify-between items-center px-4 mb-4">
-          <p class="text-2xl font-bold text-gray-500">Daftar siswa</p>
+        <div class="flex flex-col sm:flex-row justify-between items-center px-4 mb-4">
+          <p class="text-lg sm:text-2xl font-bold text-gray-500">Daftar siswa</p>
           <div class="flex space-x-1">
             <router-link :to="{name: 'master.student.create' }" class="py-2 text-sm px-4 rounded-md border border-gray-300 text-gray-600 disabled:opacity-50 text-white font-medium">Import siswa</router-link>
             <router-link :to="{name: 'master.student.create' }" class="py-2 text-sm px-4 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah siswa</router-link>
@@ -20,7 +20,7 @@
           <p class="pb-2 border-b-2 border-gray-200 px-4 flex-1"></p>
         </div>
         <div class="flex w-full py-1 px-4 py-2">
-          <div class="w-md">
+          <div class="w-full sm:w-md">
             <input v-model="search" type="text" class="rounded-md py-1 px-4 focus:border-blue-200 border border-gray-300 w-full" name="" placeholder="Cari siswa">
           </div>
         </div>
@@ -60,7 +60,7 @@
           </div>
         </div>
       </perfect-scrollbar>
-      <div class="bg-white py-2 flex justify-between px-2 rounded-b-lg mb-2 border-l border-b border-r border-gray-300 shadow-sm">
+      <div class="bg-white py-2 flex flex-col sm:flex-row justify-between px-2 rounded-b-lg mb-2 border-l border-b border-r border-gray-300 shadow-sm">
         <div>
           <button class="text-sm rounded-l-md py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200 disabled:opacity-50 text-white border-l border-t border-b border-gray-300" @click="clearSelected" :disabled="selected.length === 0">Clear</button>
           <button class="text-sm py-1 px-3 bg-gray-100 text-gray-600 hover:shadow-xl hover:bg-gray-200  disabled:opacity-50 text-white border-t border-b border-gray-300" @click="selectAllRows" :disabled="selected.length == (students != null ? students.length : 0)">Pilih semua</button>
