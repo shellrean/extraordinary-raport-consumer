@@ -106,6 +106,7 @@ import Notify from '@/core/services/notif.service'
 import Message from '@/core/domain/message.domain'
 import MasterMenus from '@/components/MasterMenus'
 import StudentDetail from './StudentDetail'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 import _ from 'lodash'
@@ -141,11 +142,7 @@ export default {
   methods: {
     ...mapActions('student',['fetchStudents', 'deleteStudent']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     showDataStudent(id) {
       let idx = this.students.map((item) => item.id).indexOf(id)

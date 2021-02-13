@@ -17,8 +17,7 @@
 </template>
 <script>
 import HomeIconLine from '@/components/icons/HomeIconLine'
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'AcademicYear',
@@ -38,11 +37,7 @@ export default {
     ...mapActions(['setAcademicYear']),
     ...mapActions('sett', ['updateSetting']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     setAcademic() {
       const academic = this.academics.filter((item) => item.id == this.academicID)

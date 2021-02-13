@@ -65,8 +65,7 @@
   </div>
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 export default {
@@ -85,11 +84,7 @@ export default {
   methods: {
     ...mapActions('classroom',['fetchClassrooms']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
   },
   created() {

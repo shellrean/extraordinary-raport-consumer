@@ -2,8 +2,6 @@
   <router-view />
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
 import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
   name: 'App',

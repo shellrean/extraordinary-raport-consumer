@@ -30,10 +30,9 @@
   </div>
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
 import Semester from '@/core/domain/semester.domain'
 import MasterMenus from '@/components/MasterMenus'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 export default {
   components: {
@@ -52,11 +51,7 @@ export default {
   methods: {
     ...mapActions('academic',['fetchAcademics', 'generateAcademic']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     checkYearNow() {
       const academic = this.academics[this.academics.length-1]

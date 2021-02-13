@@ -91,11 +91,11 @@
   </div>
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
 import { mapState, mapActions } from 'vuex'
 import _ from 'lodash'
+
 export default {
   name: 'ResultingPlanSubject',
   components: {
@@ -126,11 +126,7 @@ export default {
     ...mapActions('subject_plan', ['fetchSubjectPlans']),
     ...mapActions('academic_classroom', ['fetchClassrooms']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     selectAllRows() {
       this.selected = this.plans.map((item) => item.id)

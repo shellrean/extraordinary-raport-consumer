@@ -78,8 +78,7 @@ import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
 import LogoutIconLine from '@/components/icons/LogoutIconLine'
 import TaskIconLine from '@/components/icons/TaskIconLine'
 import LoadBar from '@/components/nano/LoadBar'
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'App',
@@ -109,11 +108,7 @@ export default {
     ...mapActions('sett', ['fetchSettings']),
     ...mapActions('academic',['fetchAcademics']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     fetchData() {
       (async() => {

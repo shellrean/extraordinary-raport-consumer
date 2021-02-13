@@ -36,8 +36,7 @@
   </div>
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
 
@@ -64,11 +63,7 @@ export default {
     ...mapActions('user',['fetchUsers', 'showUser']),
     ...mapActions('academic_classroom', ['showClassroom']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     fetchDataClassrooms() {
       (async () => {

@@ -9,22 +9,16 @@
         <button type="submit" class="py-1 px-3 rounded-md bg-green-400 border-2 border-green-500 hover:shadow-xl disabled:opacity-50 text-white font-medium">{{ isLoading ? 'Processing...' : 'Simpan' }}</button> 
       </form>
     </div>
-    <div class="absolute left-4 bottom-4 xl:left-10 xl:bottom-10">
-      <div class="flex flex-col space-y-2">
-        <Notif :msg="val.msg" v-for="val in notif" :key="val.id"/>
-      </div>
-    </div>
   </div>
 </template>
 <script>
-import Notif from '@/components/nano/Notif'
 import UserForm from './UserForm'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Form',
   components: {
     UserForm,
-    Notif,
   },
   data() {
     return {
@@ -37,6 +31,9 @@ export default {
   },
   methods: {
     ...mapActions('user', ['storeUser', 'updateUser', 'showUser']),
+    showError(err) {
+      showSweetError(this, err)
+    }
     submit() {
       if(typeof this.user.id != 'undefined') {
         (async() => {
@@ -45,14 +42,7 @@ export default {
             this.$swal('Sukses', 'Perubahan berhasil disimpan', 'success');
             this.$router.push({name: 'master.user'})
           } catch (err) {
-            let id = new Date().getTime()
-            this.notif.push({id: id, msg: err.message})
-            let idx = this.notif.map((item) => item.id).indexOf(id)
-            if(idx !== -1) {
-              setTimeout(() => { 
-                this.notif.splice(idx, 1)
-              }, 3000);
-            }
+            this.showError(err)
           }
         })()
       } else {
@@ -62,14 +52,7 @@ export default {
             this.$swal('Sukses', 'Pengguna baru berhasil disimpan', 'success');
             this.$router.push({name: 'master.user'})
           } catch (err) {
-            let id = new Date().getTime()
-            this.notif.push({id: id, msg: err.message})
-            let idx = this.notif.map((item) => item.id).indexOf(id)
-            if(idx !== -1) {
-              setTimeout(() => { 
-                this.notif.splice(idx, 1)
-              }, 3000);
-            }
+            this.showError(err)
           }
         })()
       }
@@ -81,14 +64,7 @@ export default {
         try {
           await this.showUser(this.$route.params.id)
         } catch (err) {
-          let id = new Date().getTime()
-          this.notif.push({id: id, msg: err.message})
-          let idx = this.notif.map((item) => item.id).indexOf(id)
-          if(idx !== -1) {
-            setTimeout(() => { 
-              this.notif.splice(idx, 1)
-            }, 3000);
-          }
+          this.showError(err)
         }
       })()
     }

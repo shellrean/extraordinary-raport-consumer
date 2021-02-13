@@ -11,9 +11,8 @@
   </div>
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
 import ClassroomForm from './ClassroomForm'
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'AcademicClassroomForm',
@@ -32,11 +31,7 @@ export default {
   methods: {
     ...mapActions('academic_classroom', ['storeClassroom', 'updateClassroom']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     submit() {
       if(typeof this.classroom.id == 'undefined') {

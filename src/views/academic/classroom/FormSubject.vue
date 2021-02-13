@@ -189,9 +189,8 @@
   </div>
 </template>
 <script>
+import { showSweetError } from '@/core/helper/alert.helper'
 import { mapActions, mapState } from 'vuex'
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
 import _ from 'lodash'
 
 export default {
@@ -245,11 +244,7 @@ export default {
     ...mapActions('academic_classroom', ['fetchClassroomsByAcademic']),
     ...mapActions('academic_subject', ['fetchSubjectsByClassroomAcademic', 'storeSubject', 'showSubject', 'deleteSubject', 'updateSubject', 'copySubjects']),
     showError(err) {
-      const error = new Message(err)
-      const message = error.getMessage()
-      const code = error.getCode()
-      const notification = new Notify(code, message)
-      notification.sweetAlertNotif(this)
+      showSweetError(this, err)
     },
     fetchDataSubjectsClassroom() {
       (async() => {
@@ -296,61 +291,62 @@ export default {
       this.teacher = teacher
       this.modalTeacher = false
     },
+    createDataSubject() {
+      (async () => {
+        try {
+          this.$store.state.academic_subject.subject = {
+            classroomAcademicID: parseInt(this.$route.params.id),
+            subjectID: this.subject.id,
+            teacherID: this.teacher.id,
+            mgn: parseInt(this.mgn),
+          }
+          const provider = await this.storeSubject()
+          this.$store.state.academic_subject.subjects.push({
+            id: provider.id,
+            classroomAcademicID: provider.classroomAcademicID,
+            subjectID: provider.subjectID,
+            teacherID: provider.teacherID,
+            subjectName: this.subject.name,
+            teacherName: this.teacher.name,
+            mgn: this.mgn,
+          })
+          this.clearForm()
+        } catch (err) {
+          this.showError(err)
+        }
+      })()
+    },
+    updateDataSubject() {
+      (async () => {
+        try {
+          this.$store.state.academic_subject.subject = {
+            id: this.$store.state.academic_subject.subject.id,
+            classroomAcademicID: parseInt(this.$route.params.id),
+            subjectID: this.subject.id,
+            teacherID: this.teacher.id,
+            mgn: parseInt(this.mgn),
+          }
+          const provider = await this.updateSubject()
+          const index = this.classroomSubjects.map((item) => item.id).indexOf(this.$store.state.academic_subject.subject.id)
+          if (index !== -1) {
+            const subjects = this.$store.state.academic_subject.subjects
+            subjects[index].subjectID =  this.subject.id
+            subjects[index].teacherID = this.teacher.id
+            subjects[index].subjectName = this.subject.name
+            subjects[index].teacherName = this.teacher.name
+            subjects[index].mgn = this.mgn
+          }
+          this.clearForm()
+        } catch (err) {
+          this.showError(err)
+        }
+      })()
+    },
     submit() {
       if(typeof this.$store.state.academic_subject.subject.id == 'undefined') {
-        (async () => {
-          try {
-            this.$store.state.academic_subject.subject = {
-              classroomAcademicID: parseInt(this.$route.params.id),
-              subjectID: this.subject.id,
-              teacherID: this.teacher.id,
-              mgn: parseInt(this.mgn),
-            }
-
-            const provider = await this.storeSubject()
-            this.$store.state.academic_subject.subjects.push({
-              id: provider.id,
-              classroomAcademicID: provider.classroomAcademicID,
-              subjectID: provider.subjectID,
-              teacherID: provider.teacherID,
-              subjectName: this.subject.name,
-              teacherName: this.teacher.name,
-              mgn: this.mgn,
-            })
-
-            this.clearForm()
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.createDataSubject()
       } else {
-        (async () => {
-          try {
-            this.$store.state.academic_subject.subject = {
-              id: this.$store.state.academic_subject.subject.id,
-              classroomAcademicID: parseInt(this.$route.params.id),
-              subjectID: this.subject.id,
-              teacherID: this.teacher.id,
-              mgn: parseInt(this.mgn),
-            }
-
-            const provider = await this.updateSubject()
-
-            const index = this.classroomSubjects.map((item) => item.id).indexOf(this.$store.state.academic_subject.subject.id)
-            if (index !== -1) {
-              const subjects = this.$store.state.academic_subject.subjects
-              subjects[index].subjectID =  this.subject.id
-              subjects[index].teacherID = this.teacher.id
-              subjects[index].subjectName = this.subject.name
-              subjects[index].teacherName = this.teacher.name
-              subjects[index].mgn = this.mgn
-            }
-
-            this.clearForm()
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.updateDataSubject()
       }
     },
     deleteSubjectFromClassroom(id, index) {
