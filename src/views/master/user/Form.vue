@@ -33,7 +33,7 @@ export default {
     ...mapActions('user', ['storeUser', 'updateUser', 'showUser']),
     showError(err) {
       showSweetError(this, err)
-    }
+    },
     submit() {
       if(typeof this.user.id != 'undefined') {
         (async() => {
