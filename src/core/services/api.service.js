@@ -27,24 +27,25 @@ $axios.interceptors.response.use(
         if(error.response.status == 401) {
             let err_code = error.response.data.error_code
             if (err_code == 1201) {
-                store.dispatch('auth/refreshToken', {
-                    'refresh_token': store.state.refresh_token,
-                })
-                .then((re) => {
-                    const config = error.config;
-                    config.headers['Authorization'] = `Bearer ${store.state.access_token}`
-
-                    return new Promise((resolve, reject) => {
-                        axios.request(config).then(response => {
-                            resolve(response)
-                        }).catch((error) => {
-                            reject(error)
-                        })
+                if (store.state.status_rt == 0) {
+                    store.commit('_set_status_rt', 1)
+                }
+                
+                if (store.state.status_rt == 1) {
+                    store.commit('_set_status_rt', 2)
+                    store.dispatch('auth/refreshToken', {
+                        'refresh_token': store.state.refresh_token,
                     })
-                })
-                .catch((err) => {
-                    console.log('Error fatal: ', err)
-                })
+                    .then((res) => {
+                        console.clear()
+                        store.commit('_set_status_rt', 0)
+                        return Promise.reject(error)
+                    })
+                    .catch((err) => {
+                        store.commit('_set_status_rt', 1)
+                        return Promise.reject(error)
+                    })
+                }
             }
             else if([1203, 1202].includes(err_code)) {
                 (async function () {
