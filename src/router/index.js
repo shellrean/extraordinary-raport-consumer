@@ -29,6 +29,7 @@ const SettingIndex = () => import("@/views/sett/Index")
 
 const ResultingIndex = () => import("@/views/resulting/Index")
 const ResultingSubjectPlanIndex = () => import("@/views/resulting/subject_plan/Index")
+const ResultingSubjectPlanForm = () => import("@/views/resulting/subject_plan/Form")
 
 Vue.use(VueRouter)
 
@@ -177,6 +178,12 @@ const routes = [
         path: 'r/sp',
         name: 'resulting.subject.plan',
         component: ResultingSubjectPlanIndex,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'r/sp/c',
+        name: 'resulting.subject.plan.create',
+        component: ResultingSubjectPlanForm,
         meta: { authorize: [Role.Teacher] }
       }
     ]

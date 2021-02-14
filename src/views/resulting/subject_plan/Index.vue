@@ -3,7 +3,7 @@
     <div class="h-full w-full mx-auto lg:flex-1 px-3 min-h-0 min-w-0">
       <div class="bg-white pt-4 pb-2 rounded-t-md border-t border-l border-r border-gray-300 shadow-sm flex flex-col">
         <div class="flex justify-start space-x-2 mb-6 px-4">
-          <div class="w-4 h-4 bg-red-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
+          <router-link :to="{name:'resulting.index'}" class="block w-4 h-4 bg-red-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></router-link>
           <div class="w-4 h-4 bg-yellow-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
           <div class="w-4 h-4 bg-green-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
         </div>
@@ -122,7 +122,7 @@ export default {
       return this.classrooms.filter((item) => item.classroomName.toLowerCase().includes(this.classroomName.toLowerCase()))
     }
   },
-  method: {
+  methods: {
     ...mapActions('subject_plan', ['fetchSubjectPlans']),
     ...mapActions('academic_classroom', ['fetchClassrooms']),
     showError(err) {
@@ -137,7 +137,7 @@ export default {
     fetchDataSubjectPlans() {
       (async() => {
         try {
-          await this.fetchDataSubjectPlans({
+          await this.fetchSubjectPlans({
             query: this.search,
             teacherID: this.authorized_user.id,
             classroomID: this.classroomSelected.id,
@@ -196,7 +196,7 @@ export default {
     this.fetchDataSubjectPlans()
   },
   watch: {
-    search: _.debounce(function (value) {
+    search: _.debounce(function(value) {
       this.fetchDataSubjectPlans()
     })
   }
