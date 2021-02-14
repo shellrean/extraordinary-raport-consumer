@@ -102,8 +102,6 @@
   </div>
 </template>
 <script>
-import Notify from '@/core/services/notif.service'
-import Message from '@/core/domain/message.domain'
 import MasterMenus from '@/components/MasterMenus'
 import StudentDetail from './StudentDetail'
 import { showSweetError } from '@/core/helper/alert.helper'
