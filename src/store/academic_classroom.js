@@ -8,10 +8,10 @@ import Message from '@/core/domain/message.domain.js'
 const endpoint = Object.freeze({
     fetchData: "classroom-academics/",
     fetchDataByAcademic: "classroom-academics/academic/",
-    getSingleData: "classroom-academics/classroom-academic",
+    getSingleData: "classroom-academics/classroom-academic/",
     storeSingleData: "classroom-academics/classroom-academic",
     updateSigleData: "classroom-academics/classroom-academic",
-    deleteSingleData: "classroom-academics/classroom-academic"
+    deleteSingleData: "classroom-academics/classroom-academic/"
 })
 
 /**
