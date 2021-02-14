@@ -34,7 +34,7 @@ export default {
     ...mapActions('student', ['storeStudent', 'updateStudent', 'showStudent']),
     showError(err) {
       showSweetError(this, err)
-    }
+    },
     submit() {
       if(typeof this.student.id != 'undefined') {
         (async() => {
