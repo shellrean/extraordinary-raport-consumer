@@ -185,6 +185,12 @@ const routes = [
         name: 'resulting.subject.plan.create',
         component: ResultingSubjectPlanForm,
         meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'r/sp/:id/e',
+        name: 'resulting.subject.plan.edit',
+        component: ResultingSubjectPlanForm,
+        meta: { authorize: [Role.Teacher] }
       }
     ]
   }

@@ -7,37 +7,19 @@
           <div class="w-4 h-4 bg-yellow-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
           <div class="w-4 h-4 bg-green-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
         </div>
-        <div class="flex justify-between items-center px-4 mb-4">
-          <p class="text-2xl font-bold text-gray-500">Rencana pembelajaran</p>
+        <div class="flex flex-col sm:flex-row justify-between items-center px-4 mb-4">
+          <p class="text-lg sm:text-2xl font-bold text-gray-500">Rencana pembelajaran</p>
           <div class="flex space-x-1">
+            <router-link to="/" class="py-2 text-sm px-4 rounded-md border border-gray-300 text-gray-600 disabled:opacity-50 text-white font-medium">Dump rencana</router-link>
             <router-link :to="{name: 'resulting.subject.plan.create' }" class="py-2 text-sm px-5 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah rencana</router-link>
           </div>
         </div>
-        <div class="flex space-x-1 w-full py-1 px-4 py-2">
-          <div class="w-md">
-            <input v-model="classroomSelected.classroomName" v-if="!dialogClassroom" @click="dialogClassroom = !dialogClassroom" type="text" class="pl-4 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-blue-300 w-full" name="" placeholder="Kelas Akademik">
-            <div class="bg-white border-2 border-gray-300 rounded-lg px-3 py-2" v-if="dialogClassroom">
-              <div class="flex items-center bg-gray-200 rounded-md">
-                <div class="pl-2">
-                  <svg class="fill-current text-gray-500 w-6 h-6" xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24">
-                    <path class="heroicon-ui"
-                    d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
-                  </svg>
-                </div>
-                <input v-model="classroomName" class="w-full rounded-md bg-gray-200 text-gray-700 leading-tight focus:outline-none py-2 px-2" type="text" placeholder="Cari Kelas">
-              </div>
-              <div class="py-3 text-sm">
-                <div v-for="(classroom, index) in filteredClassroom" @click="setClassroom(classroom)" class="flex items-center justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2">
-                  <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
-                  <div class="flex-grow font-medium px-2">{{ classroom.name }}</div>
-                </div>
-                <small v-if="filteredClassroom === null || filteredClassroom.length === 0" class="text-gray-600">Kelas tidak ditemukan</small>
-              </div>
-            </div>
-          </div>
-          <div class="w-md">
-            <input type="text" class="pl-4 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-blue-300 w-full" name="" placeholder="Cari...">
+        <div class="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 w-full py-1 px-4 py-2">
+          <div class="w-full sm:w-56">
+            <select v-model="classroomSelected" class="h-full text-gray-700 w-full pl-4 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-blue-300" :readonly="isLoading" :class="{'bg-gray-200' : isLoading}">
+              <option :value="0">Semua kelas</option>
+              <option v-for="(classroom, index) in filteredClassroom" :value="classroom.classroomAcademicID">{{ classroom.classroomName}}</option>
+            </select>
           </div>
         </div>
       </div>
@@ -45,7 +27,7 @@
         <div class="bg-white py-2 px-2 border-l border-r border-gray-300">
           <div class="hover:bg-gray-50 p-1 sm:p-0 mb-1 border-b border-gray-200" v-for="(plan, index) in plans" :key="plan.id">
             <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
-              <div class="sm:px-1 flex items-start">
+              <div class="flex-1 sm:px-1 flex flex-col sm:flex-row items-start">
                 <div class="pl-2 pr-2 sm:pr-0">
                   <input type="checkbox" :value="plan.id" :checked="selected.includes(plan.id)" @input="onCheckClick"/>
                 </div>
@@ -56,25 +38,30 @@
                 </div>
               </div>
               <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
-                <div class="flex flex-col">
-                  <p class="sm:px-3 text-xs text-gray-700">Tipe</p>
-                  <p class="sm:px-3 text-gray-800 max-w-md text-sm">{{ getTextType(plan.type) }}</p>
+                <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+                  <div class="flex flex-col">
+                    <p class="sm:px-3 text-xs text-gray-700">Tipe</p>
+                    <p class="sm:px-3 text-gray-800 max-w-md text-sm">{{ getTextType(plan.type) }}</p>
+                  </div>
+                </div>
+                <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+                  <div class="flex flex-col">
+                    <p class="sm:px-3 text-xs text-gray-700">Jumlah</p>
+                    <p class="sm:px-3 text-gray-800 max-w-md text-sm">{{ plan.countPlan }}</p>
+                  </div>
+                </div>
+                <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+                  <div class="flex flex-col">
+                    <p class="sm:px-3 text-xs text-gray-700">Point</p>
+                    <p class="sm:px-3 text-gray-800 max-w-md text-sm">{{ plan.maxPoint }}</p>
+                  </div>
                 </div>
               </div>
               <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
-                <div class="flex flex-col">
-                  <p class="sm:px-3 text-xs text-gray-700">Jumlah</p>
-                  <p class="sm:px-3 text-gray-800 max-w-md text-sm">{{ plan.countPlan }}</p>
-                </div>
+                <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+                <router-link :to="{name: 'resulting.subject.plan.edit', params: {id: plan.id}}" class="py-1 px-4 text-sm rounded-md bg-yellow-50 text-yellow-600 border-yellow-300 border hover:shadow-md">Edit</router-link>
+                <button class="py-1 px-4 text-sm rounded-md bg-red-50 text-red-600 border-red-300 border hover:shadow-md" @click="deleteDataSubjectPlan(plan.id, index)">Hapus</button>
               </div>
-              <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
-                <div class="flex flex-col">
-                  <p class="sm:px-3 text-xs text-gray-700">Point</p>
-                  <p class="sm:px-3 text-gray-800 max-w-md text-sm">{{ plan.maxPoint }}</p>
-                </div>
-              </div>
-              <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
-                <button class="py-1 px-4 text-sm rounded-md bg-gray-50 text-gray-600 border-gray-300 border hover:shadow-md">Detail</button>
               </div>
             </div>
           </div>
@@ -106,7 +93,7 @@ export default {
       search: "",
       selected: [],
       classroomName: "",
-      classroomSelected: {},
+      classroomSelected: 0,
       dialogClassroom: false,
     }
   },
@@ -115,16 +102,26 @@ export default {
     ...mapState('auth',['authorized_user']),
     ...mapState('subject_plan', ['plans']),
     ...mapState('academic_classroom', ['classrooms']),
+    ...mapState('academic_subject', ['subjects']),
     filteredClassroom() {
-      if(this.classrooms == null) {
+      if (this.subjects == null || this.subjects == undefined) {
         return []
       }
-      return this.classrooms.filter((item) => item.classroomName.toLowerCase().includes(this.classroomName.toLowerCase()))
-    }
+      const result = []
+      const map = new Map()
+      for (const item of this.subjects) {
+        if(!map.has(item.classroomAcademicID)) {
+          map.set(item.classroomAcademicID, true);
+          result.push(item)
+        }
+      }
+      return result;
+    },
   },
   methods: {
-    ...mapActions('subject_plan', ['fetchSubjectPlans']),
+    ...mapActions('subject_plan', ['fetchSubjectPlans', 'deleteSubjectPlan', 'deleteSubjectPlans']),
     ...mapActions('academic_classroom', ['fetchClassrooms']),
+    ...mapActions('academic_subject', ['fetchSubjects']),
     showError(err) {
       showSweetError(this, err)
     },
@@ -134,13 +131,27 @@ export default {
     clearSelected() {
       this.selected = []
     },
+    fetchDataSubjects() {
+      (async () => {
+        try {
+          await this.fetchSubjects()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataSubjects()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     fetchDataSubjectPlans() {
       (async() => {
         try {
+          this.clearSelected()
           await this.fetchSubjectPlans({
             query: this.search,
             teacherID: this.authorized_user.id,
-            classroomID: this.classroomSelected.id,
+            classroomID: this.classroomSelected,
           })
         } catch (err) {
           if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
@@ -186,6 +197,49 @@ export default {
         }
       }
     },
+    doDeleteDataSubjectPlan(id, index) {
+      (async() => {
+        try {
+          await this.deleteSubjectPlan(id)
+          this.$store.state.subject_plan.plans.splice(index, 1)
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteDataSubjectPlan(id, index)
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    deleteDataSubjectPlan(id, index) {
+      this.$swal({
+        title: 'Peringatan',
+        text: "Rencana pembelajaran ini akan dihapus berserta data yang terkait, Pastikan anda belum mengimplementasikan rencana pembelajaran yang dipilih pada penilaian",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#c7c7c7',
+        confirmButtonText: 'Iya, Lanjutkan!'
+      }).then((result) => { 
+        if(result.value) {
+          this.doDeleteDataSubjectPlan(id, index)
+        }
+      })
+    },
+    doMultipleDeletePlans() {
+      (async() => {
+        try {
+          await this.deleteSubjectPlans(this.selected)
+          this.fetchDataSubjectPlans()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doMultipleDeletePlans()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     multipleDeletePlans() {
       this.$swal({
         title: 'Peringatan',
@@ -196,15 +250,21 @@ export default {
         cancelButtonColor: '#c7c7c7',
         confirmButtonText: 'Iya, Lanjutkan!'
       }).then(async (result) => {
-
+        if(result.value) {
+          this.doMultipleDeletePlans()
+        }
       })
     }
   },
   created() {
     this.fetchDataSubjectPlans()
+    this.fetchDataSubjects()
   },
   watch: {
     search: _.debounce(function(value) {
+      this.fetchDataSubjectPlans()
+    }),
+    classroomSelected: _.debounce(function(value) {
       this.fetchDataSubjectPlans()
     })
   }

@@ -8,8 +8,10 @@ import Message from '@/core/domain/message.domain.js'
 const endpoint = Object.freeze({
     fetchData: "classroom-subject-plans/",
     createData: "classroom-subject-plans/classroom-subject-plan",
+    getSingleData: "classroom-subject-plans/classroom-subject-plan/",
     updateData: "classroom-subject-plans/classroom-subject-plan",
     deleteData: "classroom-subject-plans/classroom-subject-plan/",
+    deleteMultiData: "classroom-subject-plans/delete"
 })
 
 /**
@@ -27,6 +29,7 @@ const state = () => ({
  */
 const mutations = {
     _assign_plans_data,
+    _assign_plan_data,
 }
 
 /**
@@ -35,9 +38,11 @@ const mutations = {
  */
 const actions = {
     fetchSubjectPlans,
+    getSubjectPlan,
     createSubjectPlan,
     updateSubjectPlan,
     deleteSubjectPlan,
+    deleteSubjectPlans,
 }
 
 export default {
@@ -76,6 +81,15 @@ function _assign_plans_data(state, payload) {
 }
 
 /**
+ * Assign data to state "plan"
+ * @param {*} state
+ * @param {*} payload 
+ */
+function _assign_plan_data(state, payload) {
+    state.plan = payload
+}
+
+/**
  * Fetch "subject plans" data
  * @type actions
  * 
@@ -92,6 +106,31 @@ function fetchSubjectPlans({ commit }, payload = {query: "", teacherID: 0, class
             })
             if (network.data.success) {
                 commit('_assign_plans_data', network.data.data)
+            }
+            commit('_set_loading', false, { root: true })
+            resolve(network.data)
+        } catch (error) {
+            reject(getError(error))
+            commit('_set_loading', false, { root: true })
+        }
+    })
+}
+
+/**
+ * Get single "subject plan" data
+ * @param {*} store
+ * @param {*} subjectPlanID
+ */
+function getSubjectPlan({ commit }, subjectPlanID) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const network = await $axios.get(endpoint.getSingleData+subjectPlanID,{
+                before: () => {
+                    commit('_set_loading', true, { root: true })
+                }
+            })
+            if (network.data.success) {
+                commit('_assign_plan_data', network.data.data)
             }
             commit('_set_loading', false, { root: true })
             resolve(network.data)
@@ -133,10 +172,10 @@ function createSubjectPlan({ commit, state }) {
  * @param {*} commit
  * @param {*} payload
  */
-function updateSubjectPlan({ commit }, payload) {
+function updateSubjectPlan({ commit, state }) {
     return new Promise(async (resolve, reject) => {
         try {
-            const network = await $axios.put(endpoint.createData, payload, {
+            const network = await $axios.put(endpoint.createData, state.plan, {
                 before: () => {
                     commit('set_loading', true, { root: true })
                 }
@@ -165,6 +204,26 @@ function deleteSubjectPlan({ commit }, planID) {
                     commit('set_loading', true, { root: true })
                 }
             })
+            commit('_set_loading', false, { root: true })
+            resolve(network.data)
+        } catch (error) {
+            reject(getError(error))
+            commit('_set_loading', false, { root: true })
+        }
+    })
+}
+
+/**
+ * Delete multiple "subject plans"
+ * @param {*} store
+ * @param {Array} ids
+ */
+function deleteSubjectPlans({ commit }, ids = []) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            commit('_set_loading', true, { root: true })
+            let network = await $axios.delete(`${endpoint.deleteMultiData}?q=${ids.join(",")}`)
+
             commit('_set_loading', false, { root: true })
             resolve(network.data)
         } catch (error) {
