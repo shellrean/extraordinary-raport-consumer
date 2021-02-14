@@ -24,7 +24,8 @@ export default new Vuex.Store({
     access_token: localStorage.getItem('access_token'),
     refresh_token: localStorage.getItem('refresh_token'),
     baseURL: process.env.VUE_APP_URL,
-    academic_active: {}
+    academic_active: {},
+    status_rt: 0 
   },
   getters: {
     isAuth: state => {
@@ -55,6 +56,9 @@ export default new Vuex.Store({
     },
     _set_academic_year(state, payload) {
       state.academic_active = payload
+    },
+    _set_status_rt(state, payload) {
+      state.status_rt = payload
     }
   },
   actions: {

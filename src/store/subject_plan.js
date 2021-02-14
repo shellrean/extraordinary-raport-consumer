@@ -13,6 +13,41 @@ const endpoint = Object.freeze({
 })
 
 /**
+ * State for store
+ * @param {*} error 
+ */
+const state = () => ({
+    plans: [],
+    plan: {}
+})
+
+/**
+ * Mutations for store
+ * @param {*} error 
+ */
+const mutations = {
+    _assign_plans_data,
+}
+
+/**
+ * Actions for store
+ * @param {*} error 
+ */
+const actions = {
+    fetchSubjectPlans,
+    createSubjectPlan,
+    updateSubjectPlan,
+    deleteSubjectPlan,
+}
+
+export default {
+    namespaced: true,
+    state,
+    mutations,
+    actions
+}
+
+/**
  * Get error data
  * @param {*} error 
  */
@@ -28,15 +63,6 @@ function getError(error) {
     }
     return Message.ErrNotSendRequest
 }
-
-/**
- * State for store
- * @param {*} error 
- */
-const state = () => ({
-    plans: [],
-    plan: {}
-})
 
 /**
  * Assign data to state "plans"
@@ -83,10 +109,10 @@ function fetchSubjectPlans({ commit }, payload = {query: "", teacherID: 0, class
  * @param {*} commit 
  * @param {*} payload
  */
-function createSubjectPlan({ commit }, payload) {
+function createSubjectPlan({ commit, state }) {
     return new Promise(async (resolve, reject) => {
         try {
-            const network = await $axios.post(endpoint.createData, payload, {
+            const network = await $axios.post(endpoint.createData, state.plan, {
                 before: () => {
                     commit('set_loading', true, { root: true })
                 }
@@ -146,30 +172,4 @@ function deleteSubjectPlan({ commit }, planID) {
             commit('_set_loading', false, { root: true })
         }
     })
-}
-
-/**
- * Mutations for store
- * @param {*} error 
- */
-const mutations = {
-    _assign_plans_data,
-}
-
-/**
- * Actions for store
- * @param {*} error 
- */
-const actions = {
-    fetchSubjectPlans,
-    createSubjectPlan,
-    updateSubjectPlan,
-    deleteSubjectPlan,
-}
-
-export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
 }
