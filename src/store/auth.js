@@ -52,7 +52,6 @@ const actions = {
                 let network = await $axios.post(`auth`, payload)
 
                 if (network.data.success) {
-                    dispatch('getAuthorizeUser')
                     localStorage.setItem('access_token', network.data.data.access_token)
                     localStorage.setItem('refresh_token', network.data.data.refresh_token)
                     commit('_set_access_token', network.data.data.access_token, { root: true })
