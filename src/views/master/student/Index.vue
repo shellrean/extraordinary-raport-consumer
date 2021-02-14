@@ -178,6 +178,10 @@ export default {
           await this.fetchStudents({ search: this.search, reverse: true })
           this.clearSelected()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.prevPage()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -188,6 +192,24 @@ export default {
           await this.fetchStudents({ search: this.search })
           this.clearSelected()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.nextPage()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    doDeleteSingleStudent(id, index) {
+      (async() => {
+        try {
+          await this.deleteStudent(id)
+          this.students.splice(index, 1)
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteSingleStudent(id, index)
+            return
+          }
           this.showError(err)
         }
       })()
@@ -201,16 +223,24 @@ export default {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#c7c7c7',
         confirmButtonText: 'Iya, Lanjutkan!'
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.value) {
-          try {
-            await this.deleteStudent(id)
-            this.students.splice(index, 1)
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doDeleteSingleStudent()
         }
       })
+    },
+    doDeleteMultipleStudents() {
+      (async() => {
+        try {
+
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteMultipleStudents()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     },
     deleteMultipleStudents() {
       this.$swal({
@@ -224,27 +254,29 @@ export default {
       }).then(async (result) => {
 
       })
+    },
+    fetchDataStudents() {
+      (async() => {
+        try {
+          this.$store.commit('student/_reset_student_cursor')
+          await this.fetchStudents({ search: this.search })
+          this.clearSelected()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataStudents()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     }
   },
   created() {
-    (async () => {
-      try {
-        this.$store.commit('student/_reset_student_cursor')
-        await this.fetchStudents()
-      } catch (err) {
-        this.showError(err)
-      }
-    })()
+    this.fetchDataStudents()
   },
   watch: {
-    search: _.debounce(async function(value) {
-      try {
-        this.$store.commit('student/_reset_student_cursor')
-        await this.fetchStudents({ search: this.search })
-        this.clearSelected()
-      } catch (err) {
-        this.showError(err)
-      }
+    search: _.debounce(function(value) {
+      this.fetchDataStudents()
     })
   }
 };

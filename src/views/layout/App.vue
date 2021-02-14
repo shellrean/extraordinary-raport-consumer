@@ -115,6 +115,10 @@ export default {
         try {
           await this.fetchSettings(['academic_active'])
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchData()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -124,6 +128,10 @@ export default {
         try {
           await this.fetchAcademics()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataAcademics()
+            return
+          }
           this.showError(err)
         }
       })()

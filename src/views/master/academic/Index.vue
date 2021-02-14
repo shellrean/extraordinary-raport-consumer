@@ -68,23 +68,33 @@ export default {
       (async() => {
         try {
           await this.generateAcademic()
+          this.fetchDataAcademics()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.generate()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    fetchDataAcademics() {
+      (async() => {
+        try {
           await this.fetchAcademics()
           this.checkYearNow()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataAcademics()
+            return
+          }
           this.showError(err)
         }
       })()
     }
   },
   created() {
-    (async () => {
-      try {
-        await this.fetchAcademics()
-        this.checkYearNow()
-      } catch (err) {
-        this.showError(err)
-      }
-    })()
+    this.fetchDataAcademics()
   }
 };
 </script>

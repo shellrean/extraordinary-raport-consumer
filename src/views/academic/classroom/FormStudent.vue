@@ -177,6 +177,10 @@ export default {
         try {
           await this.fetchStudentsByClassroomAcademic(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataStudentsClassroom()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -185,8 +189,12 @@ export default {
       (async() => {
         try {
           this.$store.commit('student/_reset_student_cursor')
-          await this.fetchStudents()
+          await this.fetchStudents({search: this.search})
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataStudents()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -209,6 +217,24 @@ export default {
             studentName: student.name,
           })
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.addStudentToClassroom(student)
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    doDeleteStudentFromClassroom(id, index) {
+      (async() => {
+        try {
+          await this.deleteStudent(id)
+          this.$store.state.academic_student.students.splice(index, 1)
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteStudentFromClassroom(id, index)
+            return
+          }
           this.showError(err)
         }
       })()
@@ -222,14 +248,9 @@ export default {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#c7c7c7',
         confirmButtonText: 'Iya, Lanjutkan!'
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.value) {
-          try {
-            await this.deleteStudent(id)
-            this.$store.state.academic_student.students.splice(index, 1)
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doDeleteStudentFromClassroom(id, index)
         }
       })
     },
@@ -240,6 +261,26 @@ export default {
     setClassroom(classroom) {
       this.classroom = classroom
       this.modalClassAcademic = false
+    },
+    doCopyClassroomStudent() {
+      (async() => {
+        try {
+          await this.copyStudents({
+            classroomAcademicID: this.classroom.id,
+            toClassroomAcademicID: parseInt(this.$route.params.id),
+          })
+          this.classroom = {}
+          this.academic = {}
+          this.form_copy = false
+          this.fetchDataStudentsClassroom()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doCopyClassroomStudent()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     },
     copyClassroomStudent() {
       this.$swal({
@@ -252,20 +293,22 @@ export default {
         confirmButtonText: 'Iya, Lanjutkan!'
       }).then(async (result) => {
         if(result.value) {
-          try {
-            await this.copyStudents({
-              classroomAcademicID: this.classroom.id,
-              toClassroomAcademicID: parseInt(this.$route.params.id),
-            })
-            this.classroom = {}
-            this.academic = {}
-            this.form_copy = false
-            this.fetchDataStudentsClassroom()
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doCopyClassroomStudent()
         }
       })
+    },
+    fetchDataClassroomsByAcademic() {
+      (async() => {
+        try {
+          await this.fetchClassroomsByAcademic(this.academic.id)
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataClassroomsByAcademic()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     }
   },
   mounted() {
@@ -273,22 +316,11 @@ export default {
   },
   watch: {
     searchStudent:  _.debounce(async function (value) {
-      try {
-        this.$store.commit('student/_reset_student_cursor')
-        this.fetchStudents({ search: this.searchStudent })
-      } catch (err) {
-        this.showError(err)
-      }
+      this.fetchDataStudents()
     }, 500),
     academic(value) {
       if(typeof value.id != 'undefined'){
-        (async() => {
-          try {
-            await this.fetchClassroomsByAcademic(value.id)
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.fetchDataClassroomsByAcademic()
       }
     }
   }

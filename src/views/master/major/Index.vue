@@ -88,15 +88,22 @@ export default {
     showError(err) {
       showSweetError(this, err)
     },
+    fetchDataMajors() {
+      (async() => {
+        try {
+          await this.fetchMajors()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataMajors()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    }
   },
   created() {
-    (async () => {
-      try {
-        await this.fetchMajors()
-      } catch (err) {
-        this.showError(err)
-      }
-    })()
+    this.fetchDataMajors()
   }
 };
 </script>

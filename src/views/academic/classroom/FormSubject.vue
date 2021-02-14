@@ -251,6 +251,10 @@ export default {
         try {
           await this.fetchSubjectsByClassroomAcademic(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataSubjectsClassroom()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -260,6 +264,9 @@ export default {
         try {
           await this.fetchSubjects()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataSubjects()
+          }
           this.showError(err)
         }
       })()
@@ -276,6 +283,10 @@ export default {
           this.teacher = this.user
           this.mgn = this.$store.state.academic_subject.subject.mgn
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.getDataSubject(id)
+            return
+          }
           this.showError(err)
         }
       })()
@@ -312,6 +323,10 @@ export default {
           })
           this.clearForm()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.createDataSubject()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -338,6 +353,10 @@ export default {
           }
           this.clearForm()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.updateDataSubject()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -349,6 +368,20 @@ export default {
         this.updateDataSubject()
       }
     },
+    doDeleteSubjectFromClassroom(id, index) {
+      (async() => {
+        try {
+          await this.deleteSubject(id)
+          this.$store.state.academic_subject.subjects.splice(index, 1)
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteSubjectFromClassroom(id, index)
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     deleteSubjectFromClassroom(id, index) {
       this.$swal({
         title: 'Peringatan',
@@ -358,14 +391,9 @@ export default {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#c7c7c7',
         confirmButtonText: 'Iya, Lanjutkan!'
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.value) {
-          try {
-            await this.deleteSubject(id)
-            this.$store.state.academic_subject.subjects.splice(index, 1)
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doDeleteSubjectFromClassroom(id, index)
         }
       })
     },
@@ -385,6 +413,26 @@ export default {
       this.classroom = classroom
       this.modalClassAcademic = false
     },
+    doCopyClassroomSubject() {
+      (async() => {
+        try {
+          await this.copySubjects({
+            classroomAcademicID: this.classroom.id,
+            toClassroomAcademicID: parseInt(this.$route.params.id),
+          })
+          this.classroom = {}
+          this.academic = {}
+          this.formCopy = false
+          this.fetchDataSubjectsClassroom()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doCopyClassroomSubject()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     copyClassroomSsubject() {
       this.$swal({
         title: 'Informasi',
@@ -396,20 +444,36 @@ export default {
         confirmButtonText: 'Iya, Lanjutkan!'
       }).then(async (result) => {
         if(result.value) {
-          try {
-            await this.copySubjects({
-              classroomAcademicID: this.classroom.id,
-              toClassroomAcademicID: parseInt(this.$route.params.id),
-            })
-            this.classroom = {}
-            this.academic = {}
-            this.formCopy = false
-            this.fetchDataSubjectsClassroom()
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doCopyClassroomSubject()
         }
       })
+    },
+    fetchDataClassroomByAcademic() {
+      (async() => {
+        try {
+          await this.fetchClassroomsByAcademic(this.academic.id)
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataClassroomByAcademic()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    fetchDataUsers() {
+      (async() => {
+        try {
+          this.$store.commit('user/_reset_user_cursor')
+          this.fetchUsers({ search: this.searchTeacher })
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataUsers()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     }
   },
   mounted() {
@@ -417,23 +481,12 @@ export default {
     this.fetchDataSubjectsClassroom()
   },
   watch: {
-    searchTeacher:  _.debounce(async function (value) {
-      try {
-        this.$store.commit('user/_reset_user_cursor')
-        this.fetchUsers({ search: this.searchTeacher })
-      } catch (err) {
-        this.showError(err)
-      }
+    searchTeacher:  _.debounce(function (value) {
+      this.fetchDataUsers()
     }, 500),
     academic(value) {
       if(typeof value.id != 'undefined'){
-        (async() => {
-          try {
-            await this.fetchClassroomsByAcademic(value.id)
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.fetchDataClassroomByAcademic()
       }
     }
   }

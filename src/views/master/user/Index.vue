@@ -123,6 +123,10 @@ export default {
           await this.fetchUsers({reverse: true })
           this.clearSelected()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.prevPage()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -134,6 +138,25 @@ export default {
           await this.fetchUsers()
           this.clearSelected()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.nextPage()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    doDeleteSingleUser(id, index) {
+      (async() => {
+        try {
+          await this.deleteUser(id)
+          this.users.splice(index, 1)
+          this.$swal('Sukses', 'Pengguna berhasil dihapus', 'success');
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteSingleUser(id, index)
+            return
+          }
           this.showError(err)
         }
       })()
@@ -149,15 +172,24 @@ export default {
         confirmButtonText: 'Iya, Lanjutkan!'
       }).then(async (result) => {
         if (result.value) {
-          try {
-            await this.deleteUser(id)
-            this.users.splice(index, 1)
-            this.$swal('Sukses', 'Pengguna berhasil dihapus', 'success');
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doDeleteSingleUser(id, index)
         }
       })
+    },
+    doDeleteMultipleUsers() {
+      (async() => {
+        try {
+          await this.deleteUsers(this.selected)
+          this.$swal('Sukses', 'Pengguna berhasil dihapus', 'success')
+          this.fetchDataUsers()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteMultipleUsers()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     },
     deleteMultipleUsers() {
       this.$swal({
@@ -170,39 +202,32 @@ export default {
         confirmButtonText: 'Iya, Lanjutkan!'
       }).then(async (result) => {
         if (result.value) {
-          try {
-            await this.deleteUsers(this.selected)
-            this.$swal('Sukses', 'Pengguna berhasil dihapus', 'success')
-            this.$store.commit('user/_reset_user_cursor')
-            await this.fetchUsers()
-            this.clearSelected()
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doDeleteMultipleUsers()
         }
       })
+    },
+    fetchDataUsers() {
+      (async() => {
+        try {
+          this.$store.commit('user/_reset_user_cursor')
+          await this.fetchUsers({ search: this.search })
+          this.clearSelected()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataUsers()
+            return
+          }
+          this.showError(err)
+        }
+      })()
     }
   },
   created() {
-    (async () => {
-      try {
-        this.$store.commit('user/_reset_user_cursor')
-        await this.fetchUsers()
-        this.clearSelected()
-      } catch (err) {
-        this.showError(err)
-      }
-    })()
+    this.fetchDataUsers()
   },
   watch: {
-    search:  _.debounce(async function (value) {
-      try {
-        this.$store.commit('user/_reset_user_cursor')
-        this.fetchUsers({ search: this.search })
-        this.clearSelected()
-      } catch (err) {
-        this.showError(err)
-      }
+    search:  _.debounce(function (value) {
+      this.fetchDataUsers()
     }, 500),
   }
 };

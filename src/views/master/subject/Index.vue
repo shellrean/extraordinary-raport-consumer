@@ -86,15 +86,22 @@ export default {
     showError(err) {
       showSweetError(this, err)
     },
+    fetchDataSubjects() {
+      (async() => {
+        try {
+          await this.fetchSubjects()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataSubjects()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    }
   },
   created() {
-    (async () => {
-      try {
-        await this.fetchSubjects()
-      } catch (err) {
-        this.showError(err)
-      }
-    })()
+    this.fetchDataSubjects()
   }
 };
 </script>

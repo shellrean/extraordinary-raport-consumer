@@ -84,6 +84,10 @@ export default {
         try {
           await this.showClassroom(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchSingleDataClassroom()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -93,6 +97,10 @@ export default {
         try {
           await this.fetchStudentsByClassroomAcademic(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataStudentsClassroom()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -102,6 +110,24 @@ export default {
         try {
           await this.fetchSubjectsByClassroomAcademic(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataSubjectsClassroom()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    doDeleteClassroom() {
+      (async() => {
+        try {
+          await this.deleteClassroom(this.$route.params.id)
+          this.$router.push({name: 'academic.classroom'})
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.doDeleteClassroom()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -115,14 +141,9 @@ export default {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#c7c7c7',
         confirmButtonText: 'Iya, Lanjutkan!'
-      }).then(async (result) => {
+      }).then((result) => {
         if(result.value) {
-          try {
-            await this.deleteClassroom(this.$route.params.id)
-            this.$router.push({name: 'academic.classroom'})
-          } catch (err) {
-            this.showError(err)
-          }
+          this.doDeleteClassroom()
         }
       })
     }

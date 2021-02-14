@@ -70,6 +70,10 @@ export default {
         try {
           await this.fetchClassrooms()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchData()
+            return
+          }
           this.showError(err)
         }
       })()

@@ -10,7 +10,7 @@
         <div class="flex justify-between items-center px-4 mb-4">
           <p class="text-2xl font-bold text-gray-500">Rencana pembelajaran</p>
           <div class="flex space-x-1">
-            <router-link :to="{name: 'master.student.create' }" class="py-2 text-sm px-5 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah rencana</router-link>
+            <router-link :to="{name: 'resulting.subject.plan.create' }" class="py-2 text-sm px-5 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah rencana</router-link>
           </div>
         </div>
         <div class="flex space-x-1 w-full py-1 px-4 py-2">
@@ -143,6 +143,10 @@ export default {
             classroomID: this.classroomSelected.id,
           })
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataSubjectPlans()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -152,6 +156,10 @@ export default {
         try {
           await this.fetchClassrooms()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataClassrooms()
+            return
+          }
           this.showError(err)
         }
       })()

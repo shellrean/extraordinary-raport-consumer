@@ -70,6 +70,10 @@ export default {
         try {
           await this.fetchClassrooms()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataClassrooms()
+            return
+          }
           this.showError(err)
         }
       })()
@@ -78,8 +82,27 @@ export default {
       (async () => {
         try {
           this.$store.commit('user/_reset_user_cursor')
-          await this.fetchUsers()
+          await this.fetchUsers({ search: this.search_teacher })
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.fetchDataTeachers()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    getDataTeacher(id) {
+      (async() => {
+        try {
+          await this.showClassroom(id)
+          const provider = await this.showUser(this.$store.state.academic_classroom.classroom.teacherID)
+          this.teacher = provider.data
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.getDataTeacher(id)
+            return
+          }
           this.showError(err)
         }
       })()
@@ -93,25 +116,12 @@ export default {
     this.fetchDataClassrooms()
     this.fetchDataTeachers()
     if(this.$route.name == 'academic.classroom.edit') {
-      (async() => {
-        try {
-          await this.showClassroom(this.$route.params.id)
-          const provider = await this.showUser(this.$store.state.academic_classroom.classroom.teacherID)
-          this.teacher = provider.data
-        } catch (err) {
-          this.showError(err)
-        }
-      })()
+      this.getDataTeacher(this.$route.params.id)
     }
   },
   watch: {
     search_teacher:  _.debounce(async function (value) {
-      try {
-        this.$store.commit('user/_reset_user_cursor')
-        this.fetchUsers({ search: this.search_teacher })
-      } catch (err) {
-        this.showError(err)
-      }
+      this.fetchDataTeachers()
     }, 500),
     teacher(val) {
       this.$store.state.academic_classroom.classroom.teacherID = val.id

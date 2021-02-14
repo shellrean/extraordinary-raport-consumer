@@ -33,26 +33,40 @@ export default {
     showError(err) {
       showSweetError(this, err)
     },
+    createDataClassroom() {
+      (async () => {
+        try {
+          await this.storeClassroom()
+          this.$router.push({name: 'academic.classroom'})
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.createDataClassroom()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    updateDataClassroom() {
+      (async () => {
+        try {
+          await this.updateClassroom()
+          this.$store.state.academic_classroom.classroom = {}
+          this.$router.push({name: 'academic.classroom'})
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.updateDataClassroom()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     submit() {
       if(typeof this.classroom.id == 'undefined') {
-        (async () => {
-          try {
-            await this.storeClassroom()
-            this.$router.push({name: 'academic.classroom'})
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.createDataClassroom()
       } else {
-        (async () => {
-          try {
-            await this.updateClassroom()
-            this.$store.state.academic_classroom.classroom = {}
-            this.$router.push({name: 'academic.classroom'})
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.updateClassroom()
       }
     }
   }

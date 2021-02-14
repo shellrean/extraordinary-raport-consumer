@@ -34,39 +34,60 @@ export default {
     showError(err) {
       showSweetError(this, err)
     },
+    updateDataUser() {
+      (async() => {
+        try {
+          await this.updateUser()
+          this.$swal('Sukses', 'Perubahan berhasil disimpan', 'success');
+          this.$router.push({name: 'master.user'})
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.updateDataUser()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    createDataUser() {
+      (async() => {
+        try {
+          await this.storeUser()
+          this.$swal('Sukses', 'Pengguna baru berhasil disimpan', 'success');
+          this.$router.push({name: 'master.user'})
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.createDataUser()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     submit() {
       if(typeof this.user.id != 'undefined') {
-        (async() => {
-          try {
-            await this.updateUser()
-            this.$swal('Sukses', 'Perubahan berhasil disimpan', 'success');
-            this.$router.push({name: 'master.user'})
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.updateDataUser()
       } else {
-        (async() => {
-          try {
-            await this.storeUser()
-            this.$swal('Sukses', 'Pengguna baru berhasil disimpan', 'success');
-            this.$router.push({name: 'master.user'})
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.createDataUser()
       }
-    }
-  },
-  created() {
-    if(this.$route.name == 'master.user.edit') {
+    },
+    getDataUser() {
       (async() => {
         try {
           await this.showUser(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.getDataUser()
+            return
+          }
           this.showError(err)
         }
       })()
+    }
+  },
+  created() {
+    if(this.$route.name == 'master.user.edit') {
+      this.getDataUser()
     }
   }
 };

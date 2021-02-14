@@ -35,37 +35,56 @@ export default {
     showError(err) {
       showSweetError(this, err)
     },
+    updateDataStudent() {
+      (async() => {
+        try {
+          await this.updateStudent()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.updateDataStudent()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
+    createDataStudent() {
+      (async() => {
+        try {
+          await this.storeStudent()
+        } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.createDataStudent()
+            return
+          }
+          this.showError(err)
+        }
+      })()
+    },
     submit() {
       if(typeof this.student.id != 'undefined') {
-        (async() => {
-          try {
-            await this.updateStudent()
-            this.$router.push({name: 'master.student'})
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.updateDataStudent()
       } else {
-        (async() => {
-          try {
-            await this.storeStudent()
-            this.$router.push({name: 'master.student'})
-          } catch (err) {
-            this.showError(err)
-          }
-        })()
+        this.createDataStudent()
       }
-    }
-  },
-  created() {
-    if(this.$route.name == 'master.student.edit') {
+    },
+    getDataStudent() {
       (async() => {
         try {
           await this.showStudent(this.$route.params.id)
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.getDataStudent()
+            return
+          }
           this.showError(err)
         }
       })()
+    }
+  },
+  created() {
+    if(this.$route.name == 'master.student.edit') {
+      this.getDataStudent()
     }
   }
 };

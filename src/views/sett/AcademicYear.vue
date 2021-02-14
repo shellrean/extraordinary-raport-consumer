@@ -59,6 +59,10 @@ export default {
           })
           this.setAcademic()
         } catch (err) {
+          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
+            this.submit()
+            return
+          }
           this.showError(err)
         }
       })()
