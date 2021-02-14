@@ -146,6 +146,7 @@ export default {
       (async() => {
         try {
           await this.logout()
+          this.$store.state.auth.authorized_user = {}
           this.$router.replace({name: 'login' })
         } catch (err) {
           this.showError(err)
