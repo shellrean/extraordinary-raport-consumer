@@ -76,13 +76,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('auth', ['submit']),
+    ...mapActions('auth', ['submit','getAuthorizeUser']),
     showError(err) {
       showSweetError(this, err)
     },
     async postLogin() {
       try {
-        let provider = await this.submit(this.data)
+        await this.submit(this.data)
+        await this.getAuthorizeUser()
+        
         if (this.isAuth) {
           if(this.returnUrl != '') {
             return this.$router.push(this.returnUrl)
