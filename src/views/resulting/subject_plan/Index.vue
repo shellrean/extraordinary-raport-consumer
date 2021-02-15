@@ -8,7 +8,7 @@
           <div class="w-4 h-4 bg-green-400 rounded-full cursor-pointer hover:shadow-xl hover:w-8 hover:h-8"></div>
         </div>
         <div class="flex flex-col sm:flex-row justify-between items-center px-4 mb-4">
-          <p class="text-lg sm:text-2xl font-bold text-gray-500">Rencana pembelajaran</p>
+          <p class="text-lg sm:text-2xl font-bold text-gray-500">Rencana penilaian</p>
           <div class="flex space-x-1">
             <router-link to="/" class="py-2 text-sm px-4 rounded-md border border-gray-300 text-gray-600 disabled:opacity-50 text-white font-medium">Dump rencana</router-link>
             <router-link :to="{name: 'resulting.subject.plan.create' }" class="py-2 text-sm px-5 rounded-md bg-blue-400 disabled:opacity-50 text-white font-medium">Tambah rencana</router-link>

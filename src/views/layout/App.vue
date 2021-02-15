@@ -16,7 +16,7 @@
           </li>
           <li v-if="authorized_user.role == 2" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Resulting">
             <router-link :to="{name: 'resulting.index' }" class="h-full w-full hover:bg-gray-700 block p-3">
-              <TaskIconLine class="mx-auto h-6" />
+              <CaseIconLine class="mx-auto h-6 text-gray-300" />
             </router-link>
           </li>
           <li v-if="authorized_user.role == 1" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Dunia">
@@ -32,6 +32,11 @@
           <li v-if="authorized_user.role == 1" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Pengaturan">
             <router-link :to="{name: 'setting.index'}" class="h-full w-full hover:bg-gray-700 block p-3">
               <SettingIconLine class="mx-auto"/>
+            </router-link>
+          </li>
+          <li v-if="authorized_user.role == 2" class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Manajement Raport">
+            <router-link :to="{name: 'raporting.index'}" class="h-full w-full hover:bg-gray-700 block p-3">
+              <BookIconLine class="mx-auto h-6 text-gray-300"/>
             </router-link>
           </li>
           <li class="sm:border-b border-gray-900 flex-1 sm:w-full" title="Logout">
@@ -77,6 +82,8 @@ import DatabaseIconLine from '@/components/icons/DatabaseIconLine'
 import AttachmentIconLine from '@/components/icons/AttachmentIconLine'
 import LogoutIconLine from '@/components/icons/LogoutIconLine'
 import TaskIconLine from '@/components/icons/TaskIconLine'
+import BookIconLine from '@/components/icons/BookIconLine'
+import CaseIconLine from '@/components/icons/CaseIconLine'
 import LoadBar from '@/components/nano/LoadBar'
 import { showSweetError } from '@/core/helper/alert.helper'
 import { mapState, mapActions } from 'vuex'
@@ -90,6 +97,8 @@ export default {
     LogoutIconLine,
     TaskIconLine,
     LoadBar,
+    BookIconLine,
+    CaseIconLine
   },
   data() {
     return {
