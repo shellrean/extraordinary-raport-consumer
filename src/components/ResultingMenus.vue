@@ -5,7 +5,7 @@
         <img src="/img/icon/green-book-mark.svg" class="h-8 md:h-16">
         <span>Rencana Pembelajaran</span>
       </router-link>
-      <router-link :to="{name: 'master.subject'}" class="px-2 py-2 border border-gray-300 shadow rounded-lg hover:shadow-xl cursor-pointer flex items-center justify-center bg-white" title="Rencana pembelajaran">
+      <router-link :to="{name: 'resulting.plan.result'}" class="px-2 py-2 border border-gray-300 shadow rounded-lg hover:shadow-xl cursor-pointer flex items-center justify-center bg-white" title="Rencana pembelajaran">
         <img src="/img/icon/pencil-case.svg" class="h-8 md:h-16">
         <span>Pengisian Nilai</span>
       </router-link>
