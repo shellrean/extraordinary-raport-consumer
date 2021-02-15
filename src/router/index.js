@@ -30,6 +30,10 @@ const SettingIndex = () => import("@/views/sett/Index")
 const ResultingIndex = () => import("@/views/resulting/Index")
 const ResultingSubjectPlanIndex = () => import("@/views/resulting/subject_plan/Index")
 const ResultingSubjectPlanForm = () => import("@/views/resulting/subject_plan/Form")
+const ResultingPlanResultIndex = () => import("@/views/resulting/plan_result/Index")
+const ResultingPlanResultSubject = () => import("@/views/resulting/plan_result/Subject")
+const ResultingPlanResultSubjectInput = () => import("@/views/resulting/plan_result/input/Index")
+const ResultingPlanResultSubjectResult = () => import("@/views/resulting/plan_result/result/Index")
 
 Vue.use(VueRouter)
 
@@ -190,6 +194,30 @@ const routes = [
         path: 'r/sp/:id/e',
         name: 'resulting.subject.plan.edit',
         component: ResultingSubjectPlanForm,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'r/pr',
+        name: 'resulting.plan.result',
+        component: ResultingPlanResultIndex,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'r/pr/:id/s',
+        name: 'resulting.plan.result.subject',
+        component: ResultingPlanResultSubject,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'r/pr/s/:id/i',
+        name: 'resulting.plan.result.subject.input',
+        component: ResultingPlanResultSubjectInput,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'r/pr/s/:id/r',
+        name: 'resulting.plan.result.subjct.result',
+        component: ResultingPlanResultSubjectResult,
         meta: { authorize: [Role.Teacher] }
       }
     ]
