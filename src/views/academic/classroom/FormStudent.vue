@@ -189,7 +189,7 @@ export default {
       (async() => {
         try {
           this.$store.commit('student/_reset_student_cursor')
-          await this.fetchStudents({search: this.search})
+          await this.fetchStudents({search: this.searchStudent})
         } catch (err) {
           if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
             this.fetchDataStudents()
