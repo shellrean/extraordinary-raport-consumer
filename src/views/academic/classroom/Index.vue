@@ -35,9 +35,14 @@
 </template>
 <script>
 import HomeIconLine from '@/components/icons/HomeIconLine'
-import { showSweetError } from '@/core/helper/alert.helper'
 import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
-import { mapActions, mapState } from 'vuex'
+import {
+  vue_data,
+  vue_methods,
+  vue_computed,
+  vuex_states,
+  vuex_methods,
+} from '@/core/module/academic/classroom/index'
 export default {
   name: 'AcademicClassroom',
   components: {
@@ -45,39 +50,15 @@ export default {
     PerfectScrollbar
   },
   data() {
-    return {
-      notif: [],
-      search: ""
-    }
+    return vue_data
   },
   computed: {
-    ...mapState(['isLoading','academic_active']),
-    ...mapState('academic_classroom', ['classrooms']),
-    filteredClassroom() {
-      if(this.classrooms == null) {
-        return []
-      }
-      return this.classrooms.filter((item) => item.classroomName.toLowerCase().includes(this.search.toLowerCase()))
-    }
+    ...vuex_states,
+    ...vue_computed,
   },
   methods: {
-    ...mapActions('academic_classroom', ['fetchClassrooms']),
-    showError(err) {
-      showSweetError(this, err)
-    },
-    fetchData() {
-      (async() => {
-        try {
-          await this.fetchClassrooms()
-        } catch (err) {
-          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
-            this.fetchData()
-            return
-          }
-          this.showError(err)
-        }
-      })()
-    }
+    ...vuex_methods,
+    ...vue_methods,
   },
   created() {
     this.fetchData()
