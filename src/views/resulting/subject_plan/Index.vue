@@ -78,9 +78,14 @@
   </div>
 </template>
 <script>
-import { showSweetError } from '@/core/helper/alert.helper'
 import { PerfectScrollbar } from 'vue2-perfect-scrollbar'
-import { mapState, mapActions } from 'vuex'
+import { 
+  vue_data, 
+  vue_methods, 
+  vue_computed, 
+  vuex_states, 
+  vuex_methods 
+} from '@/core/module/resulting/subject_plan/index'
 import _ from 'lodash'
 
 export default {
@@ -89,172 +94,15 @@ export default {
     PerfectScrollbar,
   },
   data() {
-    return {
-      search: "",
-      selected: [],
-      classroomName: "",
-      classroomSelected: 0,
-      dialogClassroom: false,
-    }
+    return vue_data
   },
   computed: {
-    ...mapState(['isLoading']),
-    ...mapState('auth',['authorized_user']),
-    ...mapState('subject_plan', ['plans']),
-    ...mapState('academic_classroom', ['classrooms']),
-    ...mapState('academic_subject', ['subjects']),
-    filteredClassroom() {
-      if (this.subjects == null || this.subjects == undefined) {
-        return []
-      }
-      const result = []
-      const map = new Map()
-      for (const item of this.subjects) {
-        if(!map.has(item.classroomAcademicID)) {
-          map.set(item.classroomAcademicID, true);
-          result.push(item)
-        }
-      }
-      return result;
-    },
+    ...vuex_states,
+    ...vue_computed,
   },
   methods: {
-    ...mapActions('subject_plan', ['fetchSubjectPlans', 'deleteSubjectPlan', 'deleteSubjectPlans']),
-    ...mapActions('academic_classroom', ['fetchClassrooms']),
-    ...mapActions('academic_subject', ['fetchSubjects']),
-    showError(err) {
-      showSweetError(this, err)
-    },
-    selectAllRows() {
-      this.selected = this.plans.map((item) => item.id)
-    },
-    clearSelected() {
-      this.selected = []
-    },
-    fetchDataSubjects() {
-      (async () => {
-        try {
-          await this.fetchSubjects()
-        } catch (err) {
-          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
-            this.fetchDataSubjects()
-            return
-          }
-          this.showError(err)
-        }
-      })()
-    },
-    fetchDataSubjectPlans() {
-      (async() => {
-        try {
-          this.clearSelected()
-          await this.fetchSubjectPlans({
-            query: this.search,
-            teacherID: this.authorized_user.id,
-            classroomID: this.classroomSelected,
-          })
-        } catch (err) {
-          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
-            this.fetchDataSubjectPlans()
-            return
-          }
-          this.showError(err)
-        }
-      })()
-    },
-    fetchDataClassrooms() {
-      (async() => {
-        try {
-          await this.fetchClassrooms()
-        } catch (err) {
-          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
-            this.fetchDataClassrooms()
-            return
-          }
-          this.showError(err)
-        }
-      })()
-    },
-    setClassroom(classroom) {
-      this.classroomSelected = classroom
-    },
-    getTextType(type) {
-      const types = {
-        "task": "Tugas",
-        "evms": "Evaluasi Tengah Semester",
-        "evls": "Evaluasi Akhir Semester",
-        "exam": "Ulangan"
-      }
-      return types[type] != 'undefined' ? types[type] : '-'
-    },
-    onCheckClick(e) {
-      if(e.target.checked) {
-        this.selected.push(parseInt(e.target.value))
-      } else {
-        let idx = this.selected.indexOf(parseInt(e.target.value))
-        if (idx !== -1) {
-          this.selected.splice(idx, 1)
-        }
-      }
-    },
-    doDeleteDataSubjectPlan(id, index) {
-      (async() => {
-        try {
-          await this.deleteSubjectPlan(id)
-          this.$store.state.subject_plan.plans.splice(index, 1)
-        } catch (err) {
-          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
-            this.doDeleteDataSubjectPlan(id, index)
-            return
-          }
-          this.showError(err)
-        }
-      })()
-    },
-    deleteDataSubjectPlan(id, index) {
-      this.$swal({
-        title: 'Peringatan',
-        text: "Rencana pembelajaran ini akan dihapus berserta data yang terkait, Pastikan anda belum mengimplementasikan rencana pembelajaran yang dipilih pada penilaian",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#c7c7c7',
-        confirmButtonText: 'Iya, Lanjutkan!'
-      }).then((result) => { 
-        if(result.value) {
-          this.doDeleteDataSubjectPlan(id, index)
-        }
-      })
-    },
-    doMultipleDeletePlans() {
-      (async() => {
-        try {
-          await this.deleteSubjectPlans(this.selected)
-          this.fetchDataSubjectPlans()
-        } catch (err) {
-          if (typeof err.error_code != 'undefined' && err.error_code == 1201) {
-            this.doMultipleDeletePlans()
-            return
-          }
-          this.showError(err)
-        }
-      })()
-    },
-    multipleDeletePlans() {
-      this.$swal({
-        title: 'Peringatan',
-        text: "Rencana pembelajaran yang dipilih akan dihapus berserta data yang terkait, Pastikan anda belum mengimplementasikan rencana pembelajaran yang dipilih pada penilaian",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#c7c7c7',
-        confirmButtonText: 'Iya, Lanjutkan!'
-      }).then(async (result) => {
-        if(result.value) {
-          this.doMultipleDeletePlans()
-        }
-      })
-    }
+    ...vuex_methods,
+    ...vue_methods
   },
   created() {
     this.fetchDataSubjectPlans()

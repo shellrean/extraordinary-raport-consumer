@@ -9,9 +9,21 @@
 </template>
 <script>
 import RaportingMenus from '@/components/RaportingMenus'
+import { fetData } from '@/core/module/test'
 export default {
   components: {
     RaportingMenus
+  },
+  data() {
+    return {
+      data: "Oke laa"
+    }
+  },
+  methods: {
+    fetData,
+  },
+  created() {
+    this.fetData()
   }
 };
 </script>
