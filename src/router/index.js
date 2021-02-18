@@ -36,6 +36,8 @@ const ResultingPlanResultSubjectInput = () => import("@/views/resulting/plan_res
 const ResultingPlanResultSubjectResult = () => import("@/views/resulting/plan_result/result/Index")
 
 const RaportingIndex = () => import("@/views/raporting/Index")
+const RaportingStudentIndex = () => import("@/views/raporting/student/Index")
+const RaportingExschoolIndex = () => import("@/views/raporting/exschool/Index")
 
 Vue.use(VueRouter)
 
@@ -226,6 +228,18 @@ const routes = [
         path: 'ra',
         name: 'raporting.index',
         component: RaportingIndex,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'ra/s',
+        name: 'raporting.student.index',
+        component: RaportingStudentIndex,
+        meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'ra/e',
+        name: 'raporting.student.exschool',
+        component: RaportingExschoolIndex,
         meta: { authorize: [Role.Teacher] }
       }
     ]
