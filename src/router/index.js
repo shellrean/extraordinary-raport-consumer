@@ -38,6 +38,10 @@ const ResultingPlanResultSubjectResult = () => import("@/views/resulting/plan_re
 const RaportingIndex = () => import("@/views/raporting/Index")
 const RaportingStudentIndex = () => import("@/views/raporting/student/Index")
 const RaportingExschoolIndex = () => import("@/views/raporting/exschool/Index")
+const RaportingStudentNoteIndex = () => import("@/views/raporting/student_note/Index")
+const RaportingAttendanceIndex = () => import("@/views/raporting/attendance/Index")
+const RaportingResultIndex = () => import("@/views/raporting/result/Index")
+const RaportingFinalIndex = () => import("@/views/raporting/final/Index")
 
 Vue.use(VueRouter)
 
@@ -238,9 +242,33 @@ const routes = [
       },
       {
         path: 'ra/e',
-        name: 'raporting.student.exschool',
+        name: 'raporting.exschool.index',
         component: RaportingExschoolIndex,
         meta: { authorize: [Role.Teacher] }
+      },
+      {
+        path: 'ra/sn',
+        name: 'raporting.student_note.index',
+        component: RaportingStudentNoteIndex,
+        meta: { authorize: [Role.Teacher]}
+      },
+      {
+        path: 'ra/att',
+        name: 'raporting.attendance.index',
+        component: RaportingAttendanceIndex,
+        meta: { authorize: [Role.Teacher]}
+      },
+      {
+        path: 'ra/r',
+        name: 'raporting.result.index',
+        component: RaportingResultIndex,
+        meta: { authorize: [Role.Teacher]}
+      },
+      {
+        path: 'ra/f',
+        name: 'raporting.final.index',
+        component: RaportingFinalIndex,
+        meta: { authorize: [Role.Teacher]}
       }
     ]
   }
