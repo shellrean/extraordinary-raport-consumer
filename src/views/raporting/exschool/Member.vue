@@ -19,19 +19,21 @@
           <p class="sm:px-3 font-medium text-gray-600 text-sm w-16">NILAI</p>
         </div>
       </div>
-      <div class="hover:bg-gray-50 p-1 sm:p-0 mb-1 border-b border-gray-200" v-if="students != null" v-for="(student, index) in students">
-        <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
-          <div class="px-2 sm:px-1 flex items-center">
-            <div class="hidden sm:block pl-2 pr-2 sm:pr-0 w-20 font-medium text-gray-600 text-sm">
-              <input type="checkbox" :value="student.id" :checked="isMember(exschool.id, student.id)" @input="onCheckMember"/>
+      <div v-if="students != null">
+        <div class="hover:bg-gray-50 p-1 sm:p-0 mb-1 border-b border-gray-200" v-for="(student, index) in students" :key="index">
+          <div class="flex flex-col sm:flex-row py-1 justify-between sm:items-center">
+            <div class="px-2 sm:px-1 flex items-center">
+              <div class="hidden sm:block pl-2 pr-2 sm:pr-0 w-20 font-medium text-gray-600 text-sm">
+                <input type="checkbox" :value="student.id" :checked="isMember(exschool.id, student.id)" @input="onCheckMember"/>
+              </div>
+              <div class="flex flex-col">
+                <p class="sm:px-3 text-xs text-gray-700">{{ student.studentSRN }}</p>
+                <p class="sm:px-3 text-gray-700">{{ student.studentName }}</p>
+              </div>
             </div>
-            <div class="flex flex-col">
-              <p class="sm:px-3 text-xs text-gray-700">{{ student.studentSRN }}</p>
-              <p class="sm:px-3 text-gray-700">{{ student.studentName }}</p>
+            <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
+              <input type="text" class="bg-white py-1 px-2 w-16 border-2 font-semibold border-gray-400 rounded-md" />
             </div>
-          </div>
-          <div class="flex space-x-1 pr-2 border-t md:border-0 border-gray-200 pt-2 md:pt-0">
-            <input type="text" class="bg-white py-1 px-2 w-16 border-2 font-semibold border-gray-400 rounded-md" />
           </div>
         </div>
       </div>
