@@ -2,7 +2,7 @@
 </template>
 <script>
 import {
-  vuex_state,
+  vuex_states,
   vuex_methods,
   vue_data,
   vue_computed,
@@ -13,7 +13,7 @@ export default {
     return vue_data
   },
   computed: {
-    ...vuex_state,
+    ...vuex_states,
     ...vue_computed,
   },
   methods: {
