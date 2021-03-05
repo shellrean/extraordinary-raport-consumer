@@ -16,6 +16,7 @@ import subject_plan from './subject_plan'
 import plan_result from './plan_result'
 import exschool from './exschool'
 import exschool_student from './exschool_student'
+import student_note from './student_note'
 
 Vue.use(Vuex)
 
@@ -88,6 +89,7 @@ export default new Vuex.Store({
     subject_plan,
     plan_result,
     exschool,
-    exschool_student
+    exschool_student,
+    student_note
   }
 })
