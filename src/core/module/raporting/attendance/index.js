@@ -6,7 +6,7 @@ import { mapActions, mapState } from 'vuex'
  * @type {Object}
  */
 const vue_data = {
-
+  pageIndex: 0
 }
 
 /**
