@@ -17,6 +17,7 @@ import plan_result from './plan_result'
 import exschool from './exschool'
 import exschool_student from './exschool_student'
 import student_note from './student_note'
+import attendance from './attendance'
 
 Vue.use(Vuex)
 
@@ -90,6 +91,7 @@ export default new Vuex.Store({
     plan_result,
     exschool,
     exschool_student,
-    student_note
+    student_note,
+    attendance
   }
 })
